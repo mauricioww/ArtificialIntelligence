@@ -1,5 +1,0 @@
-(defun hola(mssg)
-    (print mssg)
-)
-
-(hola "mm")
