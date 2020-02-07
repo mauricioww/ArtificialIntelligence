@@ -105,3 +105,88 @@
             )
         )
     )
+
+; 8) Entrada: Lista con cualquier tipo de elementos de NxN -> Salida: La diagonal principal de la Lista en una lista
+    (defun diagonal(L) 
+        (let 
+            ( (diag '()) )
+            (dotimes (i (length L))
+                (push (nth i (nth i L)) diag)
+            )
+            (reverse diag)
+        )
+    )
+
+    (print (diagonal '((1 2 3) (4 5 6) (7 8 9)) ))
+
+; 10) Entrada: Lista con cualquier tipo de elementos -> Salida: Suma de solo los elementos numéricos
+
+    (defun sumaNum(L)
+        (let 
+            ( (sum 0) )
+            (dolist (i L)
+                (if (numberp i)
+                    (setq sum (+ sum i))
+                )
+            )
+            sum
+        )
+    )
+
+    (print (sumaNum '(1 a 4 5 8/2)))    
+
+; 12) Entrada: Lista, num -> Salida: Lista sin los elementos que son multiplos de num en la lista original
+; NOTA: Se asume que los elementos de la lista de entrada son númericos por el ejercicio
+    (defun filtraMult(L num)
+        (let
+            ( (newList '()) )
+            (dolist (elem L)
+                (when (numberp elem)
+                    (if (/= (mod elem num) 0)
+                        (push elem newList)
+                    )
+                )
+            )
+            (reverse newList)
+        )
+    )
+
+    (print (filtraMult '(1 45 23 66 100 2 6) 2))
+
+; 15) Entrada: 2 matrices de cualquier dimension -> Salida: El resultado de la multiplicacion en caso de que se pueda realizar
+    (defun multMatix(m1 m2)
+        (let
+            ( 
+                (matrixRes '())
+                (rowRes '())
+                (sum 0) 
+                (rowm1 (length m1))
+                (colm1 (length (nth 1 m1)))
+                (rowm2 (length m2))
+                (colm2 (length (nth 1 m2)))
+            )
+            (if (= colm1 rowm2)
+                (dotimes (i rowm1)
+                    (dotimes (j colm2)
+                        (dotimes (k rowm2)
+                            ;; (print (list (nth k (nth i m1)) (nth j (nth k m2))))
+                            ;; (print sum)
+                            (setq sum (+ sum (* (nth k (nth i m1)) (nth j (nth k m2))) ))
+                        )
+
+                        (push sum rowRes)
+                        (setq sum 0)
+                    )
+                    (push (reverse rowRes) matrixRes)
+                    (setq rowRes nil)                
+                )
+            )
+            (reverse matrixRes)
+        )
+    )
+
+    (print (multMatix '((2 4 1) (2 3 9) (3 1 8)) '((1 2 3) (3 6 1) (2 4 7))))
+
+    ;   (2 4 1)     (1 2 3)
+    ;   (2 3 9)     (3 6 1)
+    ;   (3 1 8)     (2 4 7)
