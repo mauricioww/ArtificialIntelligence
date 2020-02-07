@@ -110,6 +110,17 @@
             )
         )
     )
-    (print (palindromo "Como")))
+    ;(print (palindromo "Como")))
 
     ;; (print (coerce (coerce "hola" 'list) 'string))
+
+; 10.-
+
+    (defun añoBisiesto(año)
+        (cond 
+            ( (= (mod año 100) 0)   (= (mod año 400) 0))
+            (t                      (= (mod año 4) 0))
+        )
+    )
+
+    (print (añoBisiesto 2011))
