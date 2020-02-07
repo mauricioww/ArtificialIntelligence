@@ -77,7 +77,7 @@
     )
     (print (Ultimo-real '(24/4 4 12/2 12/2 qw e 6 ds g 6 30/2 2 1 51 6 -1 as)))
 
-; 5) Entrada: Lista -> Salida: Lista con el número de elementos NÚMERICOS seguido del número de sublistas
+; 6) Entrada: Lista -> Salida: Lista con el número de elementos NÚMERICOS seguido del número de sublistas
 ;    NOTA: Solo contará elementos númericos por especificación del ejercicio
     (defun Conteo(list)
         (let
@@ -96,7 +96,7 @@
     )
     (print (Conteo '(1 45 6 2 3 (a b s) (ba 3 2) a 3)))
 
-; 6) Entrada: Lista con posibles diferentes niveles de anidacion -> Salida: Lista con un solo nivel de anidación en el orden de aparición
+; 7) Entrada: Lista con posibles diferentes niveles de anidacion -> Salida: Lista con un solo nivel de anidación en el orden de aparición
     (defun Aplana(list)
         (let 
             ((plainList '()))
@@ -106,7 +106,7 @@
         )
     )
 
-; 8) Entrada: Lista con cualquier tipo de elementos de NxN -> Salida: La diagonal principal de la Lista en una lista
+; 8) Entrada: Lista con cualquier tipo de elementos de NxN (matriz) -> Salida: La diagonal principal de la Lista en una lista
     (defun diagonal(L) 
         (let 
             ( (diag '()) )
@@ -120,7 +120,6 @@
     (print (diagonal '((1 2 3) (4 5 6) (7 8 9)) ))
 
 ; 10) Entrada: Lista con cualquier tipo de elementos -> Salida: Suma de solo los elementos numéricos
-
     (defun sumaNum(L)
         (let 
             ( (sum 0) )
