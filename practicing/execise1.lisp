@@ -97,14 +97,19 @@
         )
     )
 
-    (print (mismotipo '(ab 11 4 .1) '(ab 32 4 .5)) )
+    ;; (print (mismotipo '(ab 11 4 .1) '(ab 32 4 .5)) )
 
 ; 9.-
-    (defun palindromo(L)
-        (let ((pal L))
-            (dolist (i L pal)
-                (setq pal (cons i pal))
+    (defun palindromo(str)
+        (let (
+            (strlist (coerce str 'list))
+            (pal '())
+        )
+            (dolist (i strlist pal)
+                (setq pal (append 'i pal i))
             )
         )
     )
-    (print (palindromo '(H a l o)))
+    (print (palindromo "Como")))
+
+    ;; (print (coerce (coerce "hola" 'list) 'string))
