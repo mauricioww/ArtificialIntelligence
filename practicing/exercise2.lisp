@@ -7,7 +7,7 @@
     )
     (print (ElemInPos 8 4 '(1 3 5 7 8 3)))
 
-; 2) Entrada: Elemento, Lista -> Salida: Inicion-ena empezando desde la primera ocurrencia de 'Elemento'
+; 2) Entrada: Elemento, Lista -> Salida: Lista empezando desde la primera ocurrencia de 'Elemento'
     (defun Inicion-en(elem list)
         (let 
             ((newList '()))
@@ -116,7 +116,6 @@
             (reverse diag)
         )
     )
-
     (print (diagonal '((1 2 3) (4 5 6) (7 8 9)) ))
 
 ; 10) Entrada: Lista con cualquier tipo de elementos -> Salida: Suma de solo los elementos numéricos
@@ -131,7 +130,6 @@
             sum
         )
     )
-
     (print (sumaNum '(1 a 4 5 8/2)))    
 
 ; 12) Entrada: Lista, num -> Salida: Lista sin los elementos que son multiplos de num en la lista original
@@ -168,11 +166,8 @@
                 (dotimes (i rowm1)
                     (dotimes (j colm2)
                         (dotimes (k rowm2)
-                            ;; (print (list (nth k (nth i m1)) (nth j (nth k m2))))
-                            ;; (print sum)
                             (setq sum (+ sum (* (nth k (nth i m1)) (nth j (nth k m2))) ))
                         )
-
                         (push sum rowRes)
                         (setq sum 0)
                     )
@@ -183,9 +178,7 @@
             (reverse matrixRes)
         )
     )
-
     (print (multMatix '((2 4 1) (2 3 9) (3 1 8)) '((1 2 3) (3 6 1) (2 4 7))))
-
     ;   (2 4 1)     (1 2 3)
     ;   (2 3 9)     (3 6 1)
     ;   (3 1 8)     (2 4 7)
