@@ -1,6 +1,6 @@
-;                   ============= Ejercicios del paquete 2 resueltos con recursión ================
-; 1) Entrada: Elemento, Indice, Lista -> Salida: Booleano indicando si el 'Elemento' esta en el 'Indice' de la 'Lista' 
-;   NOTA: 0 <= Indice < length(Lista)    
+;                =============   Solutions for the exercises in the second package using recursion    ================
+; 1) Input: Element, Index, List -> Output: Bool according if the 'Elem' is in List[Index]
+;   Note: 0 <= Index < length(List)    
     (defun ElemInPos(elem pos L)
         (cond 
             ( (= pos 0) (equal elem (first L)))
@@ -9,7 +9,7 @@
     )
     (print (ElemInPos 8 4 '(1 3 5 7 8 3)))
 
-; 2) Entrada: Elemento, Lista -> Salida: Sublista empezando desde la primera ocurrencia de 'Elemento' de la lista original
+; 2) Input: Element, List -> Output: Sublist from the first appearence of Elemen to the end of List
     (defun Inicio-en(elem L)
         (cond
             ( (null L)          nil)
@@ -19,8 +19,8 @@
     )
     (print (Inicio-en 'a '(112 2 3 4 5 654 1 er a 4 7 8 9)))
 
-; 3) Entrada: Elemento, Lista -> Salida: Sublista terminando en la ultima ocurrencia de 'Elemento'
-;   NOTA: El elemento de busqueda debe de estar en la lista, sino el resultado sera nil
+; 3) Input: Element, List -> Output: Sublist from the first elem in given list to the last appearence of 'Element'
+;   NOTE: The element must be within the list otherwise the answer will be nil
     (defun  Termina-en(elem L)
         (cond 
             ( (null (intersection (list elem) L)) nil)
@@ -29,8 +29,8 @@
     )
     (print (Termina-en 1 '(112 2 3 4 5 654 1 er a ab 4 7 8 9 1 l o 12)))
 
-; 4) Entrada: Lista -> Salida: Lista con la posicion del primer número impar seguido con su indice (en caso de haber).
-;   NOTA: La lista puede contener cualquier tipo de dato, el segundo miembro de la respuesta va de 0 a length(Lista)
+; 4) Input: List -> Output: List wich the first element is the first odd number in the given list and the second one is its index 
+;   NOTE: The elements inside the given list can be any type of data.
     (defun Primer-impar(L)
         (let
             ( (res '()) )
@@ -51,8 +51,8 @@
     )
     (print (Primer-impar '(4 e ds g 6 30/2 2 1 51 6)))
 
-; 5) Entrada: Lista -> Salida: Lista con el ultimo número real >= 0 seguido del número de ocurrencias en la Lista
-;   NOTA: La lista puede contener cualquier tipo de dato
+; 5) Input: List -> Output: List wich the first element is the last real number >= 0 and the second one is the times it appears in the list given
+;   Note: The elements in the list can be any type of data.
     (defun Ultimo-real(L)
         (let 
             ( 
@@ -60,10 +60,8 @@
                 (times 0)
             )
             (cond
-                ( (null L) nil )
-                ( (cond ()
-
-                ) () )
+                ( (null L) nil ) ; 
+                ( (and (>= (car L) 0 ) (realp (car L))) () )
             )
         )
     )

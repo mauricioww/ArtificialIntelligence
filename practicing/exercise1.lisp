@@ -1,25 +1,25 @@
-; 1.- Escribir una sola expresion para los siguientes incisos:
-    ; a) El quinto elemento de la lista
+; 1.- Write one expression for the following sentences
+    ; a) The fifth of the list
         (print (car (cddddr '(((1 2) 3) 4 (5 (6)) A (B C) D (E (F G)))) ))
     
-    ; b) Número de segundos que tiene el año bisiesto 2004.
+    ; b) Number of seconds in the leap year 2004.
         (print (* 60 60 24 366))
     
-    ; c) Si el valor numérico asociado a la variable x es diferente de cero y además
-    ; menor o igual que el valor asociado a la variable y
+    ; c) If the associated value to x is diffetent to 0 and minor or equal to the 
+    ; associated value to y
         (defun compare(x y)
             (and (/= x 0) (<= x y))
         )
         (print (compare 4 12))
 
-    ; d) Una lista con las dos soluciones reales de la ecuación  2x^2 + 7x + 5 = 0.
+    ; d) A list which elements are the answers for the following equation 2x^2 + 7x + 5 = 0.
     ; x1 = 0.6084952830141508, x2 = -4.10849528301415
         (print (list
             (+ (- (/ 7 (* 2 2))) (/ (sqrt (- (* 7 7) (* 4 2 5))) (* 2 2)) )
             (- (- (/ 7 (* 2 2))) (/ (sqrt (- (* 7 7) (* 4 2 5))) (* 2 2)) )
         ))
 
-; 2.- Escriba, en notación prefija y evalúe las siguientes expresiones aritméticas
+; 2.- Write in prefix notation and execute the following math expressions
     ; a) 
     (print (+ (* 2 4) (- 6 8)))
     ; b)
@@ -30,26 +30,34 @@
     (print (expt (/ (expt (/ 65.402 (sqrt -1)) 1/5) 0.17) 1/7))
 
 ; 3.-
-    ; a) (two) como lista, car = first, cdr = rest
+    ; a) (two) as list, car = first, cdr = rest
     (print (cdar '((one two) three four)))
-    ; b) ((EVA LISA) KARL SVEN EVA LISA KARL SVEN) solo crea una celda para la primera sublista y entonces une las tras con el metodo append
+    ; b) It just creates a cell for the first sublist then they are joined with append method
+    ; result: ((EVA LISA) KARL SVEN EVA LISA KARL SVEN)
     (print (append (cons '(eva lisa) '(karl sven)) '(eva lisa) '(karl sven)))
-    ; c) Crea una nueva lista sustituyendo el segundo argumento por el el primero en la lista original -> (EVA GITAN LISA GITAN KARIN)
+    ; c) It makes a sublist replacing the second argument by the first one in the original list
+    ; result: (EVA GITAN LISA GITAN KARIN)
     (print (subst 'gitan 'birgitta '(eva birgitta lisa birgitta karin)))
-    ; d) Borra el primer argumento en la lista dada -> (EVA LISA ANNA)
+    ; d) It removes the elements into the given list which are equal to the first argument 
+    ; result: (EVA LISA ANNA)
     (print (remove 'sven '(eva sven lisa sven anna)))
-    ; e) Borra los ultimos n elementos en la lista dada -> (KARL ADAM NILSSON)
+    ; e) It femoves the last n elements in the given list
+    ; result: (KARL ADAM NILSSON)
     (print (butlast '(karl adam nilsson gregg alisson vilma) 3))
-    ; f) Obtiene el elemento de la lista en el indice dado -> list[n]: C
+    ; f) It gets the list[n]
+    ; result: C
     (print (nth 2 '(a b c d e)))
-    ; g) Combina las funciones cdr y nth -> (C D E)
+    ; g) It mixes the functions cdr and nth
+    ; result: (C D E)
     (print (nthcdr 2 '(a b c d e)))
-    ; h) Maneja  las listas como conjuntos y saca la interseccion entre ellas -> (B C) 
+    ; h) It takes the list as sets and make the intersection between they 
+    ; result: (B C) 
     (print (intersection '(a b c) '(x b z c)))
-    ; i) Al igual que en el incisio a) obtiene un elemento de la lista (4) 
+    ; i) As the a) it gets an element in the given list
+    ; result: (4)
     (print (cdadar '(((((1 2 3) z) y) (x 4)) 7 8 (a b c (5 (6 7 8))))))
 
-; 4.- Entrada: Lista con la estructura  ((A . x) (B . y) (C . z)) -> Salida: Lista con las siguiente estrucura: ( ((x y) . A) ((y z) . C) ((z y x) . B) )
+; 4.- Input: Lista con la estructura  ((A . x) (B . y) (C . z)) -> Output: Lista con las siguiente estrucura: ( ((x y) . A) ((y z) . C) ((z y x) . B) )
     (defun recombina(L)
         (list 
             (cons (list (cdar L) (cdadr L)) (caar L))
@@ -62,14 +70,14 @@
 
 ; 5.-
 
-; 6.- Entrada: Cualquier tipo de dato -> Salida: Lista con valores booleanos especificanto si el elemento es de ese tipo
+; 6.- Input: Any data -> Output: List which values are bool type according if the data belongs that type
     (defun analiza(x)
         (list (atom x) (numberp x) (listp x) (consp x) (null x))
     )
 
 ; 7.-
     
-; 8.- Entrada: Dos lista -> Salida: Booleano que indica si las listas contienen los mismos elementos en las mismas posiciones
+; 8.- Input: Two lists -> Output: Bool which says if the given list are identically equal
     (defun mismotipo(l1 l2)
         (let (
                 (same t) ;vars
@@ -84,7 +92,7 @@
         )
     (print (mismotipo '(ab 11 4 .1) '(ab 32 4 .5)) )
 
-; 9.- Entrada: String -> Salida: Un string que contiene el palíndromo del string de entrada
+; 9.- Input: String -> Output: Palindrome of the input
     (defun palindromo(str)
         (let (
             (strlist (coerce str 'list))
@@ -99,7 +107,7 @@
 
     ;; (print (coerce (coerce "hola" 'list) 'string))
 
-; 10.- Entrada: Un número -> Salida: Booleano si es que el número representa un año bisiesto
+; 10.- Input: Number -> Output: Bool according if the number is a leap year
 
     (defun añoBisiesto(año)
         (cond 

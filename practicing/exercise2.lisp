@@ -1,13 +1,13 @@
-; Soluciones usando iteraciones
+; Iterative solutions
 
-; 1) Entrada: Elemento, Indice, Lista -> Salida: Booleano indicando si el 'Elemento' esta en el 'Indice' de la 'Lista' 
-;   NOTA: 0 <= Indice < length(Lista)    
+; 1) Input: Element, Index, List -> Output: Bool according if the 'Elem' is in List[Index]
+;   Note: 0 <= Index < length(List)    
     (defun ElemInPos(elem index list)
         (dotimes ( i index (= elem (nth i list)) ))
     )
     (print (ElemInPos 8 4 '(1 3 5 7 8 3)))
 
-; 2) Entrada: Elemento, Lista -> Salida: Lista empezando desde la primera ocurrencia de 'Elemento'
+; 2) Input: Element, List -> Output: Sublist from the first appearence of Elemen to the end of List
     (defun Inicion-en(elem list)
         (let 
             ((newList '()))
@@ -22,7 +22,7 @@
     )
     (print (Inicion-en 'a '(112 2 3 4 5 654 1 er a 4 7 8 9)))
 
-; 3) Entrada: Elemento, Lista -> Salida: Sublista terminando en la ultima ocurrencia de 'Elemento'
+; 3) Input: Element, List -> Output: Sublist from the first elem in given list to the last appearence of 'Element'
     (defun Termina-en(elem list)
         (let 
             ((newList '()))
@@ -37,8 +37,8 @@
     )
     (print (Termina-en 'a '(112 2 3 4 5 654 1 er a 4 7 8 9)))
 
-; 4) Entrada: Lista -> Salida: Lista con la posicion del primer número impar seguido con su indice (en caso de haber).
-;   NOTA: La lista puede contener cualquier tipo de dato, el segundo miembro de la respuesta va de 0 a length(Lista)
+; 4) Input: List -> Output: List wich the first element is the first odd number in the given list and the second one is its index 
+;   Note: The elements in the list can be any type of data.
     (defun Primer-impar(list)
         (let
             ((tuple '()))
@@ -55,8 +55,8 @@
     )
     (print (Primer-impar '(4 e ds g 6 30/2 2 1 51 6)))
 
-; 5) Entrada: Lista -> Salida: Lista con el ultimo número real >= 0 seguido del número de ocurrencias en la Lista
-;   NOTA: La lista puede contener cualquier tipo de dato
+; 5) Input: List -> Output: List wich the first element is the last real number >= 0 and the second one is the times it appears in the list given
+;   Note: The elements in the list can be any type of data.
     (defun Ultimo-real(list)
         (let
             (
@@ -77,8 +77,8 @@
     )
     (print (Ultimo-real '(24/4 4 12/2 12/2 qw e 6 ds g 6 30/2 2 1 51 6 -1 as)))
 
-; 6) Entrada: Lista -> Salida: Lista con el número de elementos NÚMERICOS seguido del número de sublistas
-;    NOTA: Solo contará elementos númericos por especificación del ejercicio
+; 6) Input: List -> Output: List wich first element is the number of numeric elems in the given list and the second one is the number of sublist in the given list
+;    Note: It just counts the numeric type according the exercise
     (defun Conteo(list)
         (let
             (
@@ -96,7 +96,7 @@
     )
     (print (Conteo '(1 45 6 2 3 (a b s) (ba 3 2) a 3)))
 
-; 7) Entrada: Lista con posibles diferentes niveles de anidacion -> Salida: Lista con un solo nivel de anidación en el orden de aparición
+; 7) Input: List with any number of deeper sublists -> Output: A simple list wich contains the elements of all the emelents in the given list in the order of appearence
     (defun Aplana(list)
         (let 
             ((plainList '()))
@@ -106,7 +106,7 @@
         )
     )
 
-; 8) Entrada: Lista con cualquier tipo de elementos de NxN (matriz) -> Salida: La diagonal principal de la Lista en una lista
+; 8) Input: List wich contains N sublists of N elements (matrix) -> Output: List wich contains the principal diagonal matrix
     (defun diagonal(L) 
         (let 
             ( (diag '()) )
@@ -118,7 +118,7 @@
     )
     (print (diagonal '((1 2 3) (4 5 6) (7 8 9)) ))
 
-; 10) Entrada: Lista con cualquier tipo de elementos -> Salida: Suma de solo los elementos numéricos
+; 10) Input: List wich elements are any type of data -> Output: The sum of the numeric values in the list
     (defun sumaNum(L)
         (let 
             ( (sum 0) )
@@ -132,8 +132,8 @@
     )
     (print (sumaNum '(1 a 4 5 8/2)))    
 
-; 12) Entrada: Lista, num -> Salida: Lista sin los elementos que son multiplos de num en la lista original
-; NOTA: Se asume que los elementos de la lista de entrada son númericos por el ejercicio
+; 12) Input: List, num -> Output: List wich contains only the elements not multiple of num in the given list
+; Note: It is assumed that the elements are only numeric type according to the exercise
     (defun filtraMult(L num)
         (let
             ( (newList '()) )
@@ -150,7 +150,7 @@
 
     (print (filtraMult '(1 45 23 66 100 2 6) 2))
 
-; 15) Entrada: 2 matrices de cualquier dimension -> Salida: El resultado de la multiplicacion en caso de que se pueda realizar
+; 15) Input: Two matrix of any dimension -> Output: The result of they multiplication if it can be calculate
     (defun multMatix(m1 m2)
         (let
             ( 
