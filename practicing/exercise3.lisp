@@ -69,12 +69,23 @@
         )
     )
 
+; 8) Input: List wich contains N sublists of N elements (matrix) -> Output: List wich contains the principal diagonal matrix
+
+    (defun diagonal(matrix &optional (i 0) (j 0))
+        (cond
+            ((null matrix) nil)
+            (t  (cons (nth j (nth i matrix)) (diagonal (cdr matrix) i (1+ j)) ))  
+        )
+    )
+    (print (diagonal '((1 2 3) (4 5 6) (7 8 9)) ))
+
+
 ; 10) Input: List wich elements are any type of data -> Output: The sum of the numeric values in the list
-    (defun ss(L)
+    (defun sumaNum(L)
         (cond
             ((null L) 0)
-            ((numberp (car L)) (+ (car L) (ss (cdr L))))
-            (t (ss (cdr L)))
+            ((numberp (car L)) (+ (car L) (sumaNum (cdr L))))
+            (t (sumaNum (cdr L)))
         )
     )
     (print (sumaNum '(1 a 4 5 8/2)))    
@@ -95,7 +106,7 @@
     )
     (print (filtraMult '(1 45 23 66 100 2 6) 2))
 
-; 16)
+; 16) Input: List, elem1, elem2 -> Output: Similar list to the input list but elem2 instead of elem1 in it.
 
     (defun cambia(L e1 e2)
         (cond
@@ -107,7 +118,33 @@
 
     (print (cambia '(1 e e 4 5 e 1) 'e 'a))
 
-; 20)
+; 18) Implement your own mapcar function, it must behave equal to the original.
+;    NOTE: The list in the function must have the same length
+
+    (defun myMapcar(func &optional rest) ; At least one list to operate
+        (cond
+            ((null rest) nil)
+            (t          (cons (apply func (mapcar 'car rest))
+                        (apply 'myMapcar func (mapcar 'cdr rest)) )
+            )
+        )
+    )
+
+    (defun mapcar* (function &rest args)
+            "Apply FUNCTION to successive cars of all ARGS.
+          Return the list of results."
+            ;; If no list is exhausted,
+            (if (not (null args))
+                ;; apply function to cars.
+                (cons (apply function (mapcar 'car args))
+                      (apply 'mapcar* function
+                             ;; Recurse for rest of elements.
+                             (mapcar 'cdr args)))
+                            ))
+
+    ;; (print (mapcar* 'list '(2 3 5) '(1 2 3 4)))
+
+; 20) Input: List, num -> Output: List wich contains only numeric values >= num.    
 
     (defun elimina(L n)
         (cond
@@ -119,3 +156,57 @@
     )
 
     (print (elimina '(a b 12 4 2 14 53 0 65.2) 5))
+
+; 21) Input: List1, List2, elem1, elem2 -> Output: List wich contains all elements in List1 following by the elements in List2
+;   also in the final list elem2 instead of elem1
+
+    (defun pegaYcambia(l1 l2 e1 e2)
+        (labels (
+            (cambiaLista(lista e1 e2)
+                (cond
+                    ( (null lista) nil)
+                    ( (equal (car lista) e1) (cons e2 (cambiaLista (cdr lista) e1 e2)) )
+                    (t (cons (car lista) (cambiaLista (cdr lista) e1 e2)) )
+                )
+            )
+        )
+        (append (cambiaLista l1 e1 e2) (cambiaLista l2 e1 e2)))
+        
+    )
+
+    (print (pegaYcambia '(10 1 2 3 4 1 n) '(1 5 2 1) 'n 8))
+
+; 22) Input: List which contains any type of data -> Output: List which contains just numeric data and were sort by the quicksort algorithm
+
+    (defun quicksort(L)
+    	(labels (
+            (filtNum(L) ; Clear the no-numeric values in list
+                (cond
+                    ((null L) nil) 
+                    ((numberp (car L)) (cons (car L) (filtNum (cdr L))))
+                    (t (filtNum (cdr L)))
+                )
+            )
+            (operator (e L func)
+                (cond
+                    ((or (null e) (null L)) nil)
+                    ((eval (list func e (car L))) (operator e (cdr L) func))
+                    (t (cons (car L) (operator e (cdr L) func)))
+                )
+            )
+            (qsort (L)
+                (cond
+                    ((null L) nil)
+                    (t  (append (qsort (operator (car L) (cdr L) '<))
+                                (cons (car L) nil)
+                                (qsort (operator (car L) (cdr L) '>=))
+                        )
+                    )
+                )
+            )
+        ) 
+            (qsort (filtNum L))
+        )
+    )
+
+    (print (quicksort '(124 a sf 4 13 v 2 0 -12 40)))
