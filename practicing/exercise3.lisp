@@ -58,10 +58,64 @@
             ( 
                 (res '()) 
                 (times 0)
+                (next '())
             )
             (cond
                 ( (null L) nil ) ; 
-                ( (and (>= (car L) 0 ) (realp (car L))) () )
+                ( (and (>= (car L) 0 ) (realp (car L))) (setq res (list carL 0)) )
+                (t (setq next (Ultimo-real (cdr L))) ) ; Write another cond 
+                ((equal (car res) (car next)) (list (car res) (1+ (nth 1 res))))
             )
         )
     )
+
+; 10) Input: List wich elements are any type of data -> Output: The sum of the numeric values in the list
+    (defun ss(L)
+        (cond
+            ((null L) 0)
+            ((numberp (car L)) (+ (car L) (ss (cdr L))))
+            (t (ss (cdr L)))
+        )
+    )
+    (print (sumaNum '(1 a 4 5 8/2)))    
+
+; 12) Input: List, num -> Output: List wich contains only the elements not multiple of num in the given list
+; Note: It is assumed that the elements are only numeric type according to the exercise
+
+    (defun filtraMult(L n)
+        (cond
+            ( (null L) nil)
+            ( (numberp (car L))
+            (cond
+                ((/= (mod (car L) n) 0) (cons (car L) (filtraMult (cdr L) n)))
+                (t (filtraMult (cdr L) n))
+            ) )
+            (t (filtraMult (cdr L) n))
+        )
+    )
+    (print (filtraMult '(1 45 23 66 100 2 6) 2))
+
+; 16)
+
+    (defun cambia(L e1 e2)
+        (cond
+            ((null L) nil)
+            ((eq (car L) e1) (cons e2 (cambia (cdr L) e1 e2)))
+            (t (cons (car L) (cambia (cdr L) e1 e2)))
+        )
+    )
+
+    (print (cambia '(1 e e 4 5 e 1) 'e 'a))
+
+; 20)
+
+    (defun elimina(L n)
+        (cond
+            ((null L) nil)
+            ((not (numberp (car L))) (elimina (cdr L) n))
+            ((<= (car L) n) (elimina (cdr L) n))
+            (t (cons (car L) (elimina (cdr L) n)) )
+        )
+    )
+
+    (print (elimina '(a b 12 4 2 14 53 0 65.2) 5))
