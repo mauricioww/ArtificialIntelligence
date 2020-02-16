@@ -37,7 +37,7 @@
     )
     (print (Termina-en 'a '(112 2 3 4 5 654 1 er a 4 7 8 9)))
 
-; 4) Input: List -> Output: List wich the first element is the first odd number in the given list and the second one is its index 
+; 4) Input: List -> Output: List which the first element is the first odd number in the given list and the second one is its index 
 ;   Note: The elements in the list can be any type of data.
     (defun Primer-impar(list)
         (let
@@ -55,7 +55,7 @@
     )
     (print (Primer-impar '(4 e ds g 6 30/2 2 1 51 6)))
 
-; 5) Input: List -> Output: List wich the first element is the last real number >= 0 and the second one is the times it appears in the list given
+; 5) Input: List -> Output: List which the first element is the last real number >= 0 and the second one is the times it appears in the list given
 ;   Note: The elements in the list can be any type of data.
     (defun Ultimo-real(list)
         (let
@@ -77,7 +77,7 @@
     )
     (print (Ultimo-real '(24/4 4 12/2 12/2 qw e 6 ds g 6 30/2 2 1 51 6 -1 as)))
 
-; 6) Input: List -> Output: List wich first element is the number of numeric elems in the given list and the second one is the number of sublist in the given list
+; 6) Input: List -> Output: List which first element is the number of numeric elems in the given list and the second one is the number of sublist in the given list
 ;    Note: It just counts the numeric type according the exercise
     (defun Conteo(list)
         (let
@@ -96,17 +96,24 @@
     )
     (print (Conteo '(1 45 6 2 3 (a b s) (ba 3 2) a 3)))
 
-; 7) Input: List with any number of deeper sublists -> Output: A simple list wich contains the elements of all the emelents in the given list in the order of appearence
+; 7) Input: List with any number of deeper sublists -> Output: A simple list which contains the elements of 
+;   all the emelents in the given list in the order of appearence
     (defun Aplana(list)
         (let 
             ((plainList '()))
-            (dolist (deep0 list)
-                
+            (dolist (e list)
+                (cond
+                    ((not (listp e)) (push e plainList))
+                    (t (setq plainList (append (reverse (Aplana e)) plainList)))
+                )
             )
+            (reverse plainList)
         )
     )
+    ;; (trace Aplana)
+    (print (Aplana '(a v (3 1) c s (2 (14 6 q v) 34))))    
 
-; 8) Input: List wich contains N sublists of N elements (matrix) -> Output: List wich contains the principal diagonal matrix
+; 8) Input: List which contains N sublists of N elements (matrix) -> Output: List which contains the principal diagonal matrix
     (defun diagonal(L) 
         (let 
             ( (diag '()) )
@@ -118,7 +125,25 @@
     )
     (print (diagonal '((1 2 3) (4 5 6) (7 8 9)) ))
 
-; 10) Input: List wich elements are any type of data -> Output: The sum of the numeric values in the list
+; 9) Input: List with any type data -> Output: List which contains, according de data, 'A' if is an atom
+;    'L' if is list and 'N' if is an empty list
+
+    (defun info(L)
+        (let
+            ( (res '()) )
+            (dolist (elem L)
+                (cond
+                    ( (null elem) (setq res (cons 'n res)) )
+                    ( (atom elem) (setq res (cons 'a res)) )
+                    ( (listp elem) (setq res (cons 'l res)) )
+                )
+            )
+            res
+        )
+    )
+    (print (info '(12 (1) () 4 a () g a (asv v 4) a)))
+
+; 10) Input: List which elements are any type of data -> Output: The sum of the numeric values in the list
     (defun sumaNum(L)
         (let 
             ( (sum 0) )
@@ -132,7 +157,32 @@
     )
     (print (sumaNum '(1 a 4 5 8/2)))    
 
-; 12) Input: List, num -> Output: List wich contains only the elements not multiple of num in the given list
+; 11) Input: List wich contains any type of data and even sublist to any depet -> Output: List without the vowels in the given list
+;   NOTE: According to the exersice the output list also contains sublist at any depth
+    (defun filtraVocales(L)
+        (labels (
+                (esVocal(v) (if (member v '(a e i o u)) t nil) )
+                (filtro(L)
+                    (let 
+                        ( (filtrada '()) )
+                        (dolist (e L)
+                            (cond 
+                                ((listp e) (setq filtrada  (append (filtraVocales e) filtrada)))
+                                (t 
+                                    (if (not (esVocal e)) (push e filtrada))
+                                )
+                            )
+                        )
+                        (reverse filtrada)
+                    )
+                )
+            )
+            (filtro L)
+        )    
+    )
+    (print (filtraVocales '(a b a i 21 o (2 a (b a 2) (a e) 3) ab c 3)))
+
+; 12) Input: List, num -> Output: List which contains only the elements not multiple of num in the given list
 ; Note: It is assumed that the elements are only numeric type according to the exercise
     (defun filtraMult(L num)
         (let
@@ -147,8 +197,39 @@
             (reverse newList)
         )
     )
-
     (print (filtraMult '(1 45 23 66 100 2 6) 2))
+
+; 13) Input: List wich contains any type of data and even sublist to any depet -> Output: Number of the total constructed cell in the given list
+;   NOTE: The input must contain only porper sublists
+    (defun celdas(L)
+        (let
+            ( (num 0) )
+            (dolist (e L)
+                (cond 
+                    ((listp e) (setq num (+ num (celdas e))))
+                    (t (setq num (1+ num)))
+                )
+            )
+            num
+        )
+    )
+    (print (celdas '(1 2 4 5 (3 9 (a f (gd (a 0)))) 6)))
+
+; 14) Input: Any number of arguments of any type of data -> Ouput: According to the arguments they will be evualate
+; NOTE: The implication or conditional is an operator that operates on two truth values, typically the truth 
+; values of two propositions, returning the value of false only when the first proposition is true and the second 
+; proposition false, and true in any other case.
+; SO just null will be taken as false and everything else is true
+
+    (defun implica(&rest args)
+        (dolist (e args)
+            (cond 
+                ((equal nil e) (return nil))
+            )
+        )
+        t
+    )
+    (print (implica 2 nil 'gfa 'g 'awf))
 
 ; 15) Input: Two matrix of any dimension -> Output: The result of they multiplication if it can be calculate
     (defun multMatix(m1 m2)

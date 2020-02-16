@@ -68,14 +68,27 @@
     ;(print (caar (list (cons 'hola 1) (cons 'B 2) (cons 'C 3))))
     (print (recombina (list (cons 'dificil 1) (cons 'listas 2) (cons 'adios 33))))
 
-; 5.-
+; 5.- Input: Number n -> Output: Boolean according if is real and != 0
+
+    (defun RealnoCero(n)
+        (and (realp n) (not (zerop n)))
+    )
+    (print (RealnoCero 2))
 
 ; 6.- Input: Any data -> Output: List which values are bool type according if the data belongs that type
     (defun analiza(x)
         (list (atom x) (numberp x) (listp x) (consp x) (null x))
     )
 
-; 7.-
+; 7.- Input: List1 List2 -> Output: List which contains the elements in list1 and list 2 interchanging their elements
+    (defun intercalar(l1 l2)
+        (cond
+            ( (null l1) l2)
+            ( (null l2) l1)
+            (t (append (list (car l1) (car l2)) (intercalar (cdr l1) (cdr l2))))
+        )
+    )
+    (print (intercalar '(a s) '(1 2 3 4 5 6 5 a d f)))
     
 ; 8.- Input: Two lists -> Output: Bool which says if the given list are identically equal
     (defun mismotipo(l1 l2)
@@ -90,22 +103,20 @@
                 
             )   
         )
+    )
     (print (mismotipo '(ab 11 4 .1) '(ab 32 4 .5)) )
 
 ; 9.- Input: String -> Output: Palindrome of the input
     (defun palindromo(str)
-        (let (
-            (strlist (coerce str 'list))
-            (pal '())
-        )
-            (dolist (i strlist pal)
-                (setq pal (append 'i pal i))
+        (let 
+        ( (pal (coerce str 'list)) )
+            (loop for c across (reverse str) do
+                (setq pal (append pal (list c)))
             )
+            (coerce pal 'string)
         )
     )
-    ;(print (palindromo "Como")))
-
-    ;; (print (coerce (coerce "hola" 'list) 'string))
+    (print (palindromo "Como"))
 
 ; 10.- Input: Number -> Output: Bool according if the number is a leap year
 
@@ -115,5 +126,4 @@
             (t                      (= (mod año 4) 0))
         )
     )
-
     (print (añoBisiesto 2011))
