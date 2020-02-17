@@ -326,6 +326,147 @@
 
 ;                =============   Solutions for the remaining exercises in the third package using recursion    ================
 
+; 17) Here are several ways to compute the Fibonacci serie, also these are gonna be compared with the number 50 as argument.
+;               Definition of the functions
+;   a)
+        (defun fibo1 (n)
+        ;; "Naive recursive computation of the nth element of the Fibonacci sequence"
+            (if (< n 2) n
+                (+ (fibo1 (1- n)) (fibo1 (- n 2)))))
+
+;   b)
+        (defun fibo2 (n)
+        ;; "Tail-recursive computation of the nth element of the Fibonacci sequence"
+            (labels ((fib-aux (n f1 f2)
+                                (if (zerop n) f1
+                                (fib-aux (1- n) f2 (+ f1 f2)))))
+                    (fib-aux n 0 1)))
+
+;   c) 
+        (defun fibo3(n)
+        ;"loop-based iterative computation of the nth element of the Fibonacci sequence"
+            (loop for f1 = 0 then f2
+                    and f2 = 1 then (+ f1 f2)
+                    repeat n finally (return f1)))
+
+;   d)
+        (defun fibo4 (n)
+        ;"do-based iterative computation of the nth element of the Fibonacci sequence"
+            (do ((i n (1- i))
+                (f1 0 f2)
+                (f2 1 (+ f1 f2)))
+                ((= i 0) f1)))
+
+;   e) 
+        (defun fibo5 (n)
+            ;"CPS computation of the nth element of the Fibonacci sequence"
+            (labels ((fib-aux2 (n k)
+                                (if (zerop n)
+                                    (funcall k 0 1)
+                                (fib-aux2 (1- n) (lambda (x y)
+                                                    (funcall k y (+ x y)))))))
+                    (fib-aux2 n #'(lambda (a b) a))))
+
+;   f) 
+        (defun fibo6 (n)
+            (labels ((fib2 (n)
+                            (cond ((= n 0)
+                                    (values 1 0))
+                                (t
+                                    (multiple-value-bind (val prev-val)
+                                                        (fib2 (- n 1))
+                                    (values (+ val prev-val)
+                                            val))))))
+                (nth-value 0 (fib2 n))))
+
+;   g) 
+        (defun fibo7 (n)
+            ;"Successive squaring method from SICP"
+            (labels ((fib-aux3 (a b p q count)
+                                (cond ((= count 0) b)
+                                    ((evenp count)
+                                    (fib-aux3 a
+                                                b
+                                                (+ (* p p) (* q q))
+                                                (+ (* q q) (* 2 p q))
+                                                (/ count 2)))
+                                    (t (fib-aux3 (+ (* b q) (* a q) (* a p))
+                                                (+ (* b p) (* a q))
+                                                p
+                                                q
+                                                (- count 1))))))
+                    (fib-aux3 1 0 0 1 n)))
+
+;   h) 
+        (defun fibo8 (n)
+            (if (< n 2) n
+                (if (oddp n) 
+                (let ((k (/ (1+ n) 2)))
+                    (+ (expt (fibo8 k) 2) (expt (fibo8 (1- k)) 2)))
+                (let* ((k (/ n 2)) (fk (fibo8 k)))
+                    (* (+ (* 2 (fibo8 (1- k))) fk) fk)))))
+
+;   i)
+        (let ((aFibo 1)
+             (bFibo 5))
+        (defun fibo9 ()
+            (prog1 aFibo (psetf aFibo bFibo bFibo (+ aFibo bFibo)))))
+
+;   j) 
+        ;; Taken from Winston's Lisp, 3rd edition, this is a tail-recursive version, w/o an auxiliary function
+        (defun fibo10 (n &optional (i 1) (previous-month 0) (this-month 1)) 
+            (if (<= n i)
+                this-month
+                (fibo10 n (+ 1 i) this-month (+ this-month previous-month))))
+;   k)
+        (defun fast-fib-pair (n)
+            ;"Returns f_n f_{n+1}."
+            (case n
+                ((0) (values 0 1))
+                ((1) (values 1 1))
+                (t (let ((m (floor n 2)))
+                    (multiple-value-bind (f_m f_m+1)
+                        (fast-fib-pair m)
+                    (let ((f_m^2   (* f_m f_m))
+                            (f_m+1^2 (* f_m+1 f_m+1)))
+                        (if (evenp n)
+                            (values (- (* 2 f_m+1^2)
+                                        (* 3 f_m^2)
+                                        (if (oddp m) -2 2))
+                                    (+ f_m^2 f_m+1^2))
+                            (values (+ f_m^2 f_m+1^2)
+                                    (- (* 3 f_m+1^2)
+                                        (* 2 f_m^2)
+                                        (if (oddp m) -2 2))))))))))
+                            
+;   l) 
+        ;; Fibonacci - Binet's Formula
+        (defun fibo11(n)
+            (* (/ 1 (sqrt 5))
+                (- (expt (/ (+ 1 (sqrt 5)) 2) n)
+                (expt (/ (- 1 (sqrt 5)) 2) n))))
+
+;   m) 
+        (defun fibo12 (n)
+            (/ (- (expt (/ (+ 1 (sqrt 5)) 2) n)
+                (expt (/ (- 1 (sqrt 5)) 2) n))
+                (sqrt 5)))
+
+;   Now we just need execute the functios one at time, and observe their performance. Some of them are better than the others.
+    ;; (time (print (fibo1 13)))
+    ;; (time (print (fibo2 13)))
+    ;; (time (print (fibo3 13)))
+    ;; (time (print (fibo4 13)))
+    ;; (time (print (fibo5 13)))
+    ;; (time (print (fibo6 12))) ; Here we use n-1 becuase of the definition of the function it takes n-1 as the real n argument
+    ;; (time (print (fibo7 13)))
+    ;; (time (print (fibo8 13)))
+    ;; (time (print (fibo9)))
+    ;; (time (print (fibo10 13)))
+    ;; (time (print (fast-fib-pair 13)))
+    ;; (time (print (fibo11 13)))
+    ;; (time (print (fibo12 13)))
+
 ; 16) Input: List, elem1, elem2 -> Output: Similar list to the input list but elem2 instead of elem1 in it.
     (defun cambia(L e1 e2)
         (cond
@@ -337,29 +478,14 @@
     (print (cambia '(1 e e 4 5 e 1) 'e 'a))
 
 ; 18) Implement your own mapcar function, it must behave equal to the original.
-;    NOTE: The list in the function must have the same length
-    (defun myMapcar(func &optional rest) ; At least one list to operate
-        (cond
-            ((null rest) nil)
-            (t          (cons (apply func (mapcar 'car rest))
-                        (apply 'myMapcar func (mapcar 'cdr rest)) )
-            )
+;    NOTE: The list in the function must have the same length, the remaining items in list will not be computed by func
+    (defun myMapcar(func &rest args) ; At least one list to operate
+        (if (member nil args)
+            nil
+            (cons (apply func (mapcar 'car args)) (apply 'myMapcar func (mapcar 'cdr args)))
         )
     )
-
-    (defun mapcar* (function &rest args)
-            "Apply FUNCTION to successive cars of all ARGS.
-          Return the list of results."
-            ;; If no list is exhausted,
-            (if (not (null args))
-                ;; apply function to cars.
-                (cons (apply function (mapcar 'car args))
-                      (apply 'mapcar* function
-                             ;; Recurse for rest of elements.
-                             (mapcar 'cdr args)))
-                            ))
-
-    ;; (print (mapcar* 'list '(2 3 5) '(1 2 3 4)))
+    (print (myMapcar '/ '(1 2 3) '(4 5 6 )))
 
 ; 19) Input: List of any type of data even sublist, and each sublist contains any type of data and so on (Unknown depth) 
 ;   -> Output: A one-level list wich contains all the simple elements in the given list
