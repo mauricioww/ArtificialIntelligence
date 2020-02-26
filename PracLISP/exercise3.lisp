@@ -453,7 +453,7 @@
                 (sqrt 5)))
 
 (defparameter ArgFibo 12) ; Parameter to invoke all the fibonacci functions
-(print "aaaa")
+
 ;   Now we just need execute the functios one at time, and observe their performance. Some of them are better than the others.
     (time (print (fibo1 ArgFibo)))
     (time (print (fibo2 ArgFibo)))
