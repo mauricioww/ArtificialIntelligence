@@ -1,4 +1,413 @@
+
+;                                  Solved by Marcos Mauricio Carpintero Mendoza - 2017630231
+
+                        ; ================================  Package 1 ==================================
+
+        (print "Solutions for package 1")
+; 1.- Write one expression for the following sentences
+    ; a) The fifth of the list
+        (print (car (cddddr '(((1 2) 3) 4 (5 (6)) A (B C) D (E (F G)))) ))
+    
+    ; b) Number of seconds in the leap year 2004.
+        (print (* 60 60 24 366))
+    
+    ; c) If the associated value to x is diffetent to 0 and minor or equal to the 
+    ; associated value to y
+        (defun compare(x y)
+            (and (/= x 0) (<= x y))
+        )
+        (print (compare 4 12))
+
+    ; d) A list which elements are the answers for the following equation 2x^2 + 7x + 5 = 0.
+    ; x1 = 0.6084952830141508, x2 = -4.10849528301415
+        (print (list
+            (+ (- (/ 7 (* 2 2))) (/ (sqrt (- (* 7 7) (* 4 2 5))) (* 2 2)) )
+            (- (- (/ 7 (* 2 2))) (/ (sqrt (- (* 7 7) (* 4 2 5))) (* 2 2)) )
+        ))
+
+; 2.- Write in prefix notation and execute the following math expressions
+    ; a) 
+    (print (+ (* 2 4) (- 6 8)))
+    ; b)
+    (print (/ (+ 5 -3 +4) (+ 6 2/5)))
+    ; c)
+    (print (sqrt (/ (+ (* -1 (+ -4 -3/8)) 1.4502) (expt -1 (expt (- 3 5) 1/3)))))
+    ; d)
+    (print (expt (/ (expt (/ 65.402 (sqrt -1)) 1/5) 0.17) 1/7))
+
+; 3.-
+    ; a) (two) as list, car = first, cdr = rest
+    (print (cdar '((one two) three four)))
+    ; b) It just creates a cell for the first sublist then they are joined with append method
+    ; result: ((EVA LISA) KARL SVEN EVA LISA KARL SVEN)
+    (print (append (cons '(eva lisa) '(karl sven)) '(eva lisa) '(karl sven)))
+    ; c) It makes a sublist replacing the second argument by the first one in the original list
+    ; result: (EVA GITAN LISA GITAN KARIN)
+    (print (subst 'gitan 'birgitta '(eva birgitta lisa birgitta karin)))
+    ; d) It removes the elements into the given list which are equal to the first argument 
+    ; result: (EVA LISA ANNA)
+    (print (remove 'sven '(eva sven lisa sven anna)))
+    ; e) It femoves the last n elements in the given list
+    ; result: (KARL ADAM NILSSON)
+    (print (butlast '(karl adam nilsson gregg alisson vilma) 3))
+    ; f) It gets the list[n]
+    ; result: C
+    (print (nth 2 '(a b c d e)))
+    ; g) It mixes the functions cdr and nth
+    ; result: (C D E)
+    (print (nthcdr 2 '(a b c d e)))
+    ; h) It takes the list as sets and make the intersection between they 
+    ; result: (B C) 
+    (print (intersection '(a b c) '(x b z c)))
+    ; i) As the a) it gets an element in the given list
+    ; result: (4)
+    (print (cdadar '(((((1 2 3) z) y) (x 4)) 7 8 (a b c (5 (6 7 8))))))
+
+; 4.- Input: Lista con la estructura  ((A . x) (B . y) (C . z)) -> Output: Lista con las siguiente estrucura: ( ((x y) . A) ((y z) . C) ((z y x) . B) )
+    (defun recombina(L)
+        (list 
+            (cons (list (cdar L) (cdadr L)) (caar L))
+            (cons (list (cdadr L) (cdaddr L)) (caaddr L) )
+            (cons (list (cdaddr L) (cdadr L) (cdar L)) (caadr L))
+        )
+    )
+    ;(print (caar (list (cons 'hola 1) (cons 'B 2) (cons 'C 3))))
+    (print (recombina (list (cons 'dificil 1) (cons 'listas 2) (cons 'adios 33))))
+
+; 5.- Input: Number n -> Output: Boolean according if is real and != 0
+
+    (defun RealnoCero(n)
+        (and (realp n) (not (zerop n)))
+    )
+    (print (RealnoCero 2))
+
+; 6.- Input: Any data -> Output: List which values are bool type according if the data belongs that type
+    (defun analiza(x)
+        (list (atom x) (numberp x) (listp x) (consp x) (null x))
+    )
+
+; 7.- Input: List1 List2 -> Output: List which contains the elements in list1 and list 2 interchanging their elements
+    (defun intercalar(l1 l2)
+        (cond
+            ( (null l1) l2)
+            ( (null l2) l1)
+            (t (append (list (car l1) (car l2)) (intercalar (cdr l1) (cdr l2))))
+        )
+    )
+    (print (intercalar '(a s) '(1 2 3 4 5 6 5 a d f)))
+    
+; 8.- Input: Two lists -> Output: Bool which says if the given list are identically equal
+    (defun mismotipo(l1 l2)
+        (let (
+                (same t) ;vars
+                (len (length l1))
+            )
+            (
+                loop for i from 0 to (1- (length l1)) do
+                    (setq same (and (equalp (nth i l2) (nth i l2)) same))
+                    (print same)
+                
+            )   
+        )
+    )
+    (print (mismotipo '(ab 11 4 .1) '(ab 32 4 .5)) )
+
+; 9.- Input: String -> Output: Palindrome of the input
+    (defun palindromo(str)
+        (let 
+        ( (pal (coerce str 'list)) )
+            (loop for c across (reverse str) do
+                (setq pal (append pal (list c)))
+            )
+            (coerce pal 'string)
+        )
+    )
+    (print (palindromo "Como"))
+
+; 10.- Input: Number -> Output: Bool according if the number is a leap year
+
+    (defun añoBisiesto(año)
+        (cond 
+            ( (= (mod año 100) 0)   (= (mod año 400) 0))
+            (t                      (= (mod año 4) 0))
+        )
+    )
+    (print (añoBisiesto 2011))
+
+;                         ================================  Package 2 ==================================
+;                                                       Iterative solutions
+
+        (print "Solutions for package 2")
+
+; 1) Input: Element, Index, List -> Output: Bool according if the 'Elem' is in List[Index]
+;   Note: 0 <= Index < length(List)    
+    (defun ElemInPos(elem index list)
+        (dotimes ( i index (= elem (nth i list)) ))
+    )
+    (print (ElemInPos 8 4 '(1 3 5 7 8 3)))
+
+; 2) Input: Element, List -> Output: Sublist from the first appearence of Elemen to the end of List
+    (defun Inicion-en(elem list)
+        (let 
+            ((newList '()))
+            (dolist (i list)
+                (cond 
+                    ( (equal i elem)    (push i newList) )
+                    ( (consp newList)   (push i newList) )
+                )
+            )
+            (reverse newList)
+        )
+    )
+    (print (Inicion-en 'a '(112 2 3 4 5 654 1 er a 4 7 8 9)))
+
+; 3) Input: Element, List -> Output: Sublist from the first elem in given list to the last appearence of 'Element'
+    (defun Termina-en(elem list)
+        (let 
+            ((newList '()))
+            (dolist (i (reverse list))
+                (cond 
+                    ( (equal i elem)    (push i newList))
+                    ( (consp newList)   (push i newList))
+                )
+            )
+            newList
+        )
+    )
+    (print (Termina-en 'a '(112 2 3 4 5 654 1 er a 4 7 8 9)))
+
+; 4) Input: List -> Output: List which the first element is the first odd number in the given list and the second one is its index 
+;   Note: The elements in the list can be any type of data.
+    (defun Primer-impar(list)
+        (let
+            ((tuple '()))
+            (dolist (elem (reverse list))
+                (if (numberp elem)
+                    (if (= 1 (mod elem 2))
+                        (setq tuple (list elem (position elem list :test #'equal)) )
+                    )
+                )
+                ;; (print elem)
+            )
+            tuple
+        )
+    )
+    (print (Primer-impar '(4 e ds g 6 30/2 2 1 51 6)))
+
+; 5) Input: List -> Output: List which the first element is the last real number >= 0 and the second one is the times it appears in the list given
+;   Note: The elements in the list can be any type of data.
+    (defun Ultimo-real(list)
+        (let
+            (
+                (numReal -1)
+                (times 0)
+                (found nil)
+            )
+            (dolist (elem (reverse list))
+                (if (and (realp elem) (>= elem 0))
+                    (cond 
+                        ( (null found)    (setq numReal elem) (setq times (1+ times)) (setq found t) (print elem))
+                        ( (equal numReal elem) (setq times (1+ times)) )
+                    )
+                )
+            )
+            (list numReal times) 
+        )
+    )
+    (print (Ultimo-real '(24/4 4 12/2 12/2 qw e 6 ds g 6 30/2 2 1 51 6 -1 as)))
+
+; 6) Input: List -> Output: List which first element is the number of numeric elems in the given list and the second one is the number of sublist in the given list
+;    Note: It just counts the numeric type according the exercise
+    (defun Conteo(list)
+        (let
+            (
+                (subList 0)
+                (numbers 0)
+            )
+            (dolist (elem list)
+                (cond
+                    ( (numberp elem) (setq numbers (1+ numbers)) )
+                    ( (listp elem) (setq subList (1+ subList)) )
+                )
+            )
+            (list numbers subList)
+        )
+    )
+    (print (Conteo '(1 45 6 2 3 (a b s) (ba 3 2) a 3)))
+
+; 7) Input: List with any number of deeper sublists -> Output: A simple list which contains the elements of 
+;   all the emelents in the given list in the order of appearence
+    (defun Aplana(list)
+        (let 
+            ((plainList '()))
+            (dolist (e list)
+                (cond
+                    ((not (listp e)) (push e plainList))
+                    (t (setq plainList (append (reverse (Aplana e)) plainList)))
+                )
+            )
+            (reverse plainList)
+        )
+    )
+    ;; (trace Aplana)
+    (print (Aplana '(a v (3 1) c s (2 (14 6 q v) 34))))    
+
+; 8) Input: List which contains N sublists of N elements (matrix) -> Output: List which contains the principal diagonal matrix
+    (defun diagonal(L) 
+        (let 
+            ( (diag '()) )
+            (dotimes (i (length L))
+                (push (nth i (nth i L)) diag)
+            )
+            (reverse diag)
+        )
+    )
+    (print (diagonal '((1 2 3) (4 5 6) (7 8 9)) ))
+
+; 9) Input: List with any type data -> Output: List which contains, according de data, 'A' if is an atom
+;    'L' if is list and 'N' if is an empty list
+
+    (defun info(L)
+        (let
+            ( (res '()) )
+            (dolist (elem L)
+                (cond
+                    ( (null elem) (setq res (cons 'n res)) )
+                    ( (atom elem) (setq res (cons 'a res)) )
+                    ( (listp elem) (setq res (cons 'l res)) )
+                )
+            )
+            res
+        )
+    )
+    (print (info '(12 (1) () 4 a () g a (asv v 4) a)))
+
+; 10) Input: List which elements are any type of data -> Output: The sum of the numeric values in the list
+    (defun sumaNum(L)
+        (let 
+            ( (sum 0) )
+            (dolist (i L)
+                (if (numberp i)
+                    (setq sum (+ sum i))
+                )
+            )
+            sum
+        )
+    )
+    (print (sumaNum '(1 a 4 5 8/2)))    
+
+; 11) Input: List wich contains any type of data and even sublist to any depet -> Output: List without the vowels in the given list
+;   NOTE: According to the exersice the output list also contains sublist at any depth
+    (defun filtraVocales(L)
+        (labels (
+                (esVocal(v) (if (member v '(a e i o u)) t nil) )
+                (filtro(L)
+                    (let 
+                        ( (filtrada '()) )
+                        (dolist (e L)
+                            (cond 
+                                ((listp e) (setq filtrada  (append (filtraVocales e) filtrada)))
+                                (t 
+                                    (if (not (esVocal e)) (push e filtrada))
+                                )
+                            )
+                        )
+                        (reverse filtrada)
+                    )
+                )
+            )
+            (filtro L)
+        )    
+    )
+    (print (filtraVocales '(a b a i 21 o (2 a (b a 2) (a e) 3) ab c 3)))
+
+; 12) Input: List, num -> Output: List which contains only the elements not multiple of num in the given list
+; Note: It is assumed that the elements are only numeric type according to the exercise
+    (defun filtraMult(L num)
+        (let
+            ( (newList '()) )
+            (dolist (elem L)
+                (when (numberp elem)
+                    (if (/= (mod elem num) 0)
+                        (push elem newList)
+                    )
+                )
+            )
+            (reverse newList)
+        )
+    )
+    (print (filtraMult '(1 45 23 66 100 2 6) 2))
+
+; 13) Input: List wich contains any type of data and even sublist to any depet -> Output: Number of the total constructed cell in the given list
+;   NOTE: The input must contain only porper sublists
+    (defun celdas(L)
+        (let
+            ( (num 0) )
+            (dolist (e L)
+                (cond 
+                    ((listp e) (setq num (+ num (celdas e))))
+                    (t (setq num (1+ num)))
+                )
+            )
+            num
+        )
+    )
+    (print (celdas '(1 2 4 5 (3 9 (a f (gd (a 0)))) 6)))
+
+; 14) Input: Any number of arguments of any type of data -> Ouput: According to the arguments they will be evualate
+; NOTE: The implication or conditional is an operator that operates on two truth values, typically the truth 
+; values of two propositions, returning the value of false only when the first proposition is true and the second 
+; proposition false, and true in any other case.
+; SO just null will be taken as false and everything else is true
+
+    (defun implica(&rest args)
+        (dolist (e args)
+            (cond 
+                ((equal nil e) (return nil))
+            )
+        )
+        t
+    )
+    (print (implica 2 nil 'gfa 'g 'awf))
+
+; 15) Input: Two matrix of any dimension -> Output: The result of they multiplication if it can be calculate
+    (defun multMatix(m1 m2)
+        (let
+            ( 
+                (matrixRes '())
+                (rowRes '())
+                (sum 0) 
+                (rowm1 (length m1))
+                (colm1 (length (nth 1 m1)))
+                (rowm2 (length m2))
+                (colm2 (length (nth 1 m2)))
+            )
+            (if (= colm1 rowm2)
+                (dotimes (i rowm1)
+                    (dotimes (j colm2)
+                        (dotimes (k rowm2)
+                            (setq sum (+ sum (* (nth k (nth i m1)) (nth j (nth k m2))) ))
+                        )
+                        (push sum rowRes)
+                        (setq sum 0)
+                    )
+                    (push (reverse rowRes) matrixRes)
+                    (setq rowRes nil)                
+                )
+            )
+            (reverse matrixRes)
+        )
+    )
+    (print (multMatix '((2 4 1) (2 3 9) (3 1 8)) '((1 2 3) (3 6 1) (2 4 7))))
+    ;   (2 4 1)     (1 2 3)
+    ;   (2 3 9)     (3 6 1)
+    ;   (3 1 8)     (2 4 7)
+
+;                         ================================  Package 3 ==================================
 ;                =============   Solutions for the exercises in the second package using recursion    ================
+
+        (print "Solutions for package 3")
+
 ; 1) Input: Element, Index, List -> Output: Bool according if the 'Elem' is in List[Index]
 ;   Note: 0 <= Index < length(List)    
     (defun ElemInPos(elem pos L)
@@ -326,6 +735,16 @@
 
 ;                =============   Solutions for the remaining exercises in the third package using recursion    ================
 
+; 16) Input: List, elem1, elem2 -> Output: Similar list to the input list but elem2 instead of elem1 in it.
+    (defun cambia(L e1 e2)
+        (cond
+            ((null L) nil)
+            ((eq (car L) e1) (cons e2 (cambia (cdr L) e1 e2)))
+            (t (cons (car L) (cambia (cdr L) e1 e2)))
+        )
+    )
+    (print (cambia '(1 e e 4 5 e 1) 'e 'a))
+
 ; 17) Here are several ways to compute the Fibonacci serie, also these are gonna be compared with the number 50 as argument.
 ;               Definition of the functions
 ;   a)
@@ -452,8 +871,7 @@
                 (expt (/ (- 1 (sqrt 5)) 2) n))
                 (sqrt 5)))
 
-(defparameter ArgFibo 12) ; Parameter to invoke all the fibonacci functions
-(print "aaaa")
+(defparameter ArgFibo 15) ; Parameter to invoke all the fibonacci functions, you can change as you want
 ;   Now we just need execute the functios one at time, and observe their performance. Some of them are better than the others.
     (time (print (fibo1 ArgFibo)))
     (time (print (fibo2 ArgFibo)))
@@ -468,16 +886,6 @@
     (time (print (fast-fib-pair ArgFibo)))
     (time (print (fibo11 ArgFibo)))
     (time (print (fibo12 ArgFibo)))
-
-; 16) Input: List, elem1, elem2 -> Output: Similar list to the input list but elem2 instead of elem1 in it.
-    (defun cambia(L e1 e2)
-        (cond
-            ((null L) nil)
-            ((eq (car L) e1) (cons e2 (cambia (cdr L) e1 e2)))
-            (t (cons (car L) (cambia (cdr L) e1 e2)))
-        )
-    )
-    (print (cambia '(1 e e 4 5 e 1) 'e 'a))
 
 ; 18) Implement your own mapcar function, it must behave equal to the original.
 ;    NOTE: The list in the function must have the same length, the remaining items in list will not be computed by func
@@ -567,3 +975,5 @@
     )
 
     (print (quicksort '(124 a sf 4 13 v 2 0 -12 40)))
+
+;                                  Solved by Marcos Mauricio Carpintero Mendoza - 2017630231
