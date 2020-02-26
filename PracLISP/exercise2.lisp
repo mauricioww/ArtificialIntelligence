@@ -29,7 +29,7 @@
             (dolist (i (reverse list))
                 (cond 
                     ( (equal i elem)    (push i newList))
-                    ( (consp newList)   (push i newList))
+                    ( (consp newList)   (push i newList)) 
                 )
             )
             newList
