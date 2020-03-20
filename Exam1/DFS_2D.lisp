@@ -45,6 +45,7 @@
 )
 
 (defun array-to-list(arr)
+    "It turns the original array into a list to make easier the programming"
     (let 
         (
             (x (aref arr 0))
@@ -85,6 +86,7 @@
       (pop  *open*))
 
 (defun valid-state? (x y)
+    "It cheks if the state is inside the maze"
     (let
         (
             (rows (get-maze-rows))
@@ -99,7 +101,14 @@
     (and (and (zerop (nth i config)) xi) (and (zerop (nth j config))) yi)
 )
 
+;;      In this type of maze is harder, because there is more movements. Well, to verify if the transition is correct
+;;      I made some tricks with the wall configuration in binary in order to make boolean opeartions.
+;;      Overmore, when the transitions is a turn in a corner or is the coming into either inner or outer 'room' make sure
+;;      you are doing the rigth moves.
+;;      At last but not least, this piece of code looks fancy haha
+
 (defun valid-operator? (op state)
+    "This function checks if the transition in the maze is correct"
     (let*
         (    
             (x (first state))
@@ -153,7 +162,8 @@
     )
 )
 
-(defun apply-operator (op state)    
+(defun apply-operator (op state)  
+    "This functions makes the transition of some state according to the operator"
     (let*
         (
             (x (first state))

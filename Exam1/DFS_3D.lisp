@@ -1,5 +1,5 @@
 ;;                  =============        Solved by Marcos Mauricio Carpintero Mendoza    2017630231      ===============
-;;                                                 2D Mazes with DFS
+;;                                                 3D Mazes with DFS
 
 ;;                                  Initial state           |                   Final state
 ;;             (xi, yi)  ->  This is the initial position        (xf, yf)  ->   This is the final position
@@ -15,14 +15,10 @@
 (defparameter  *open* ())    ;; Frontera de busqueda...                                              
 (defparameter  *memory* ())  ;; Memoria de intentos previos
 
-;; (def)
 (defparameter  *id*  -1)  ;; Identificador del ultimo nodo creado
 (defparameter  *expanded*  0)  ;; Identificador del ultimo nodo creado
 (defparameter  *maxima-frontera*  0)  ;; Identificador del ultimo nodo creado
 (defparameter  *current-ancestor*  nil)  ;;Id del ancestro común a todos los descendientes que se generen
-(defparameter *real-ancestor* nil)
-;;(defparameter  *solution*  nil)  ;;lista donde se almacenará la solución recuperada de la memoria
-(defparameter *z* 0)
 (defparameter *listSolution* '())
 
 (defparameter  *operators*  '(  
@@ -42,11 +38,13 @@
 )
 
 (defun get-config (coord)
+    "Here I write to save code, I mean here I split the state to get the config wall"
     (get-cell-walls (first coord) (second coord))
 )
 
+
 (defun get-walls-ancestor(idAncestor nodes)
-    ;; (format t "~% In id ~A ~%" (first (first nodes)))
+    "Returns the walls configurations of some previous state"
     (cond
         ((null nodes)                               nil)
         ((= idAncestor (first (first nodes)))       (get-config (second (first nodes))))
@@ -55,6 +53,7 @@
 )
 
 (defun array-to-list(arr)
+    "It turns the original array into a list to make easier the programming"
     (let 
         (
             (x (aref arr 0))
@@ -62,10 +61,6 @@
         )
         (list x y)
     )
-)
-
-(defun flippea (b)
-    (boole BOOLE-XOR b 1)
 )
 
 ;;;=======================================================================================
@@ -99,6 +94,7 @@
       (pop  *open*))
 
 (defun valid-state? (x y)
+    "It cheks if the state is inside the maze"
     (let*
         (
             (rows (get-maze-rows))
@@ -108,17 +104,12 @@
     )
 )
 
-(defun corner(config i j xi yi)
-    "It says if at least one wall of the corner in a cell is free-way"
-    (and (and (zerop (nth i config)) xi) (and (zerop (nth j config))) yi)
-)
-
-
-(defun free-way (config bit1 bit2)
-    (if (or (= 0 (logand config bit1)) (= 0 (logand config bit2))) 1 0)
-)
-
-(defun valid-operator? (op state &optional)
+;;      Here one of the most important function in the whole code, the idea is simple: check the last transtion to know
+;;      and also check if the current state is one new config (16, 17) in the moment we know that we could check 
+;;      if this new transitions is a simple one o a complex one.
+;;      I use some tricks with logic bit operations to make easier the programming, and also it looks very fancy.
+(defun valid-operator? (op state)
+    "This function checks if the transition in the maze is correct"
     (let*
         (    
             (config (get-config state))
@@ -190,15 +181,21 @@
 )
 
 (defun get-z(config op)
+    "According to the parameter config it computes if we are over the 'bridge' or under the 'bridge'"
     (case op
-        (:up                 (if (= config 17) 1 0) )
-        (:right              (if (= config 16) 1 0) )
-        (:down              (if (= config 17) 1 0) )
-        (:left              (if (= config 16) 1 0) )
+        (:up            (if (= config 17) 1 0) )
+        (:right         (if (= config 16) 1 0) )
+        (:down          (if (= config 17) 1 0) )
+        (:left          (if (= config 16) 1 0) )
     )
 )
 
+;;      As I like the simple programming the firs idea I got was: Why just don't make a special state when is 16 or 17.
+;;      I mean, in those states we just need to know if we are over o under the bridge so in that case the representation
+;;      of the state change from two coordinates to three cooridnates.
+;;      And thats it. Obviously is the responsability of the programmer to know this and argue the fact of why using this technique.
 (defun apply-operator (op state)    
+    "This function checks simple apply the operator, but it make a trick."
     (let*
         (
             (x (first state))
@@ -207,17 +204,16 @@
             (x-- (1- x))
             (y++ (1+ y))
             (y-- (1- y))
-            (z 0)
             (name (first op))
             (nextConfig 0)
             
         )
         (setq nextConfig
             (case name
-                (:up            (if (valid-state? x-- y) (get-cell-walls x-- y) -1) )
-                (:right            (if (valid-state? x y++) (get-cell-walls x y++)  -1)) 
-                (:down           (if (valid-state? x++ y) (get-cell-walls x++ y)  -1) )
-                (:left      (if (valid-state? x y--) (get-cell-walls x y--) -1) )
+                (:up                (if (valid-state? x-- y) (get-cell-walls x-- y) -1) )
+                (:right             (if (valid-state? x y++) (get-cell-walls x y++) -1) ) 
+                (:down              (if (valid-state? x++ y) (get-cell-walls x++ y) -1) )
+                (:left              (if (valid-state? x y--) (get-cell-walls x y--) -1) )
             )
         )
         (if (> nextConfig 15)
@@ -249,7 +245,6 @@
             (incf  *expanded*)
            (dolist  (op  *operators*  descendientes) 
 	         (setq  new-state  (apply-operator  op estado))  ;; primero se aplica el operador  y  después
-            ;; (FORMAT T "~%~{~a~} a esto ~{~a~}" estado new-state) ;; delete
 		 (when (and (valid-operator?  op  estado) (valid-state? (first new-state) (second new-state)))           ;; se valida el resultado...
 	                (setq  descendientes  (cons  (list new-state op) descendientes))))) )
 
@@ -269,8 +264,6 @@
 	       ((remember-state? (first (first  lista-estados-y-ops)) *memory*)  ;; si se recuerda el primer elemento de la lista, filtrarlo...
 		       (filter-memories  (rest  lista-estados-y-ops)))
 		(T  (cons  (first lista-estados-y-ops) (filter-memories  (rest  lista-estados-y-ops))))) )  ;; de lo contrario, incluirlo en la respuesta
-
-
 
 ;;;=======================================================================================
 ;;  EXTRACT-SOLUTION                           These functions are imported.
@@ -295,8 +288,6 @@
          (pop *solution*)
 	     *solution*))
 
-
-
 (defun  display-solution ()
 "Despliega la solución en forma conveniente y numerando los pasos"
     (format  t  "1) ~A nodos creados. ~%" *id*)
@@ -307,6 +298,7 @@
     (format  t  "5) Tiempo: ~A segundos.~%~%" (float (/ (- *time2* *time1*) internal-time-units-per-second))) ;; Running time
    
 )  
+
 (defun reset-all () 
 "Reinicia todas las variables globales para realizar una nueva búsqueda..."
      (setq  *open*  ())
@@ -350,7 +342,6 @@
 		         (t (setq  *current-ancestor*  (first  nodo)) 
 			     (setq  sucesores  (expand estado))
 			     (setq  sucesores  (filter-memories  sucesores))     ;;Filtrar los estados ya revisados...
-                    ;; (print sucesores)
 			      (loop for  element  in  sucesores  do
 				    (insert-to-open  (first element)  (second element)))))))  )
      
