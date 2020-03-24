@@ -15,10 +15,18 @@
 (defparameter  *open* ())    ;; Frontera de busqueda...                                              
 (defparameter  *memory* ())  ;; Memoria de intentos previos
 
+(defparameter  *memory-operations*  (make-hash-table))    ;; Memoria de operaciones
+(defparameter  *memory-ancestor*    (make-hash-table))    ;; Memoria de ancestros
+
+(defparameter  *memory-open*       (make-hash-table))    ;; Memoria de operaciones
+(defparameter  *memory-distance*   (make-hash-table))    ;; Memoria de la distancia a ese nodo
+
+
 (defparameter  *id*  -1)  ;; Identificador del ultimo nodo creado
 (defparameter  *expanded*  0)  ;; Identificador del ultimo nodo creado
 (defparameter  *maxima-frontera*  0)  ;; Identificador del ultimo nodo creado
 (defparameter  *current-ancestor*  nil)  ;;Id del ancestro común a todos los descendientes que se generen
+
 (defparameter *listSolution* '())
 
 (defparameter  *operators*  '(  
@@ -238,7 +246,7 @@
 ;;        Construye y regresa una lista con todos los descendientes validos de [estado]
 ;;;=======================================================================================
 
-(defun expand (estado)
+(defun expandDFS (estado)
 "Obtiene todos los descendientes válidos de un estado, aplicando todos los operadores en *ops* en ese mismo órden"
      (let ((descendientes  nil)
 	     (new-state  nil))
@@ -249,9 +257,7 @@
 	                (setq  descendientes  (cons  (list new-state op) descendientes))))) )
 
 (defun  remember-state?  (estado  lista-memoria)
-"Busca un estado en una lista de nodos que sirve como memoria de intentos previos
-     el estado tiene estructura:  [(<m0><c0><b0>) (<m1><c1><b1>)],
-     el nodo tiene estructura : [<Id> <estado> <id-ancestro> <operador> ]"  
+"Busca un estado en una lista de nodos que sirve como memoria de intentos previos"
      (cond ((null  lista-memoria)  Nil)
 	        ((equal  estado  (second (first  lista-memoria)))  T)  ;;el estado es igual al que se encuentra en el nodo?
 		(T  (remember-state?  estado  (rest  lista-memoria))))  )
@@ -274,7 +280,7 @@
 ;;                                    el proceso de solución del problema...
 ;;;=======================================================================================
 
-(defun extract-solution (nodo)
+(defun extract-solution-DFS (nodo)
 "Rastrea en *memory* todos los descendientes de [nodo] hasta llegar al estado inicial"
      (labels ((locate-node  (id  lista)       ;; función local que busca un nodo por Id  y si lo encuentra regresa el nodo completo
 		  (cond ((null  lista)  Nil)
@@ -311,7 +317,7 @@
      (setq *time1* 0)
      (setq *time2* 0))
 
-(defun  blind-search-DFS ()
+(defun  simple-DFS ()
 "Realiza una búsqueda ciega, por el método especificado y desde un estado inicial hasta un estado meta
     los métodos posibles son:  :depth-first - búsqueda en profundidad
                                :breath-first - búsqueda en anchura"
@@ -336,11 +342,11 @@
 	   (cond    ((equal  edo-meta  estado)
                     (setq *time2* (get-internal-run-time))
 		                (format  t  "Éxito. Meta encontrada ~%~%")
-                        (extract-solution  nodo) 
+                        (extract-solution-DFS  nodo) 
 		                (display-solution)
 		                (setq  meta-encontrada  T))
 		         (t (setq  *current-ancestor*  (first  nodo)) 
-			     (setq  sucesores  (expand estado))
+			     (setq  sucesores  (expandDFS estado))
 			     (setq  sucesores  (filter-memories  sucesores))     ;;Filtrar los estados ya revisados...
 			      (loop for  element  in  sucesores  do
 				    (insert-to-open  (first element)  (second element)))))))  )
@@ -349,5 +355,5 @@
 ;;        Load functions and invoking star_maze
 ;;;=======================================================================================
 
-(add-algorithm 'blind-search-DFS)
+(add-algorithm 'simple-DFS)
 (start-maze)

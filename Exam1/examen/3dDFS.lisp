@@ -1,12 +1,12 @@
 ;;                  =============        Solved by Marcos Mauricio Carpintero Mendoza    2017630231      ===============
-;;                                                 2D Mazes with DFS
+;;                                                 3D Mazes with DFS
 
 ;;                                  Initial state           |                   Final state
 ;;             (xi, yi)  ->  This is the initial position        (xf, yf)  ->   This is the final position
 
 ;;          Explanation: As you can see both states are simple coordinates in the maze, it's very obvious. 
 
-;;               Rules: 1. The agent cannot move to other cell which has the constraints according to a normal maze
+;;               Rules: 1. The agent cannot move to other cell which has the constraints according to a 3d maze
 
 ;;          =============      Im gonna use some of the previous functions because this is the DFS algorithm      ==============
 
@@ -15,50 +15,53 @@
 (defparameter  *open* ())    ;; Frontera de busqueda...                                              
 (defparameter  *memory* ())  ;; Memoria de intentos previos
 
+(defparameter  *memory-operations*  (make-hash-table))    ;; Memoria de operaciones
+(defparameter  *memory-ancestor*    (make-hash-table))    ;; Memoria de ancestros
+
+(defparameter  *memory-open*       (make-hash-table))    ;; Memoria de operaciones
+(defparameter  *memory-distance*   (make-hash-table))    ;; Memoria de la distancia a ese nodo
+
 
 (defparameter  *id*  -1)  ;; Identificador del ultimo nodo creado
 (defparameter  *expanded*  0)  ;; Identificador del ultimo nodo creado
 (defparameter  *maxima-frontera*  0)  ;; Identificador del ultimo nodo creado
 (defparameter  *current-ancestor*  nil)  ;;Id del ancestro común a todos los descendientes que se generen
-;;(defparameter  *solution*  nil)  ;;lista donde se almacenará la solución recuperada de la memoria
 
 (defparameter *listSolution* '())
 
 (defparameter  *operators*  '(  
                                 (:up            0)
-                                (:up_right      1)
                                 (:right         2)
-                                (:down_right    3)
                                 (:down          4)
-                                (:down_left     5)
                                 (:left          6)
-                                (:up_left       7)
                             )
 )
 
 (defparameter *time1* 0) ;; Variables to calculate the execute time of the two algorithms 
 (defparameter *time2* 0)
 
+(defun and-operator (config n)
+    "Returns boolean according the config allows the movement"
+    (= (logand config n) n)
+)
+
+(defun get-config (coord)
+    "Here I write to save code, I mean here I split the state to get the config wall"
+    (get-cell-walls (first coord) (second coord))
+)
 
 
-;; It computes the lsh and logand functions in one and also return a list with the result
-;; It returns a list with the binary num representation of the input
-(defun getBinaries (n)
-    "Gets the configuration of a specific cell"
-    (loop for i below 4 collect (if (logbitp i n) 1 0)) 
-    ;; (*let 
-    ;;     (
-    ;;         (bina (map 'list #'digit-char-p (write-to-string n :base 2)))
-    ;;         (len (length bina))
-    ;;     )
-    ;;     (loop for i from len to 4 do
-    ;;         (setq bina (list 0 bina))
-    ;;     )
-    ;;     (bina)
-    ;; )
+(defun get-walls-ancestor(idAncestor nodes)
+    "Returns the walls configurations of some previous state"
+    (cond
+        ((null nodes)                               nil)
+        ((= idAncestor (first (first nodes)))       (get-config (second (first nodes))))
+        (t                                          (get-walls-ancestor idAncestor (rest nodes)))
+    )
 )
 
 (defun array-to-list(arr)
+    "It turns the original array into a list to make easier the programming"
     (let 
         (
             (x (aref arr 0))
@@ -99,7 +102,8 @@
       (pop  *open*))
 
 (defun valid-state? (x y)
-    (let
+    "It cheks if the state is inside the maze"
+    (let*
         (
             (rows (get-maze-rows))
             (cols (get-maze-cols))
@@ -108,107 +112,98 @@
     )
 )
 
-
-(defun corner(config i j xi yi)
-    "It says if at least one wall of the corner in a cell is free-way"
-    (and (and (zerop (nth i config)) xi) (and (zerop (nth j config))) yi)
-)
-
+;;      Here one of the most important function in the whole code, the idea is simple: check the last transtion to know
+;;      and also check if the current state is one new config (16, 17) in the moment we know that we could check 
+;;      if this new transitions is a simple one o a complex one.
+;;      I use some tricks with logic bit operations to make easier the programming, and also it looks very fancy.
 (defun valid-operator? (op state)
-    ;; (let*
-    ;;     (
-    ;;         (x (first state))
-    ;;         (y (second state))
-    ;;     )
-        
-    ;;     (if (not (valid-state? x y)) (return-from valid-operator? nil) ) ;; Similar to break
-    ;; )
-    ;; The above let* might be ommited, i guess
+    "This function checks if the transition in the maze is correct"
     (let*
         (    
-            (x (first state))
-            (y (second state))
+            (config (get-config state))
 
-            (x++ (1+ x))
-            (x-- (1- x))
-            (y++ (1+ y))
-            (y-- (1- y))
+            (bridge (> config 15))
 
-            (rows (get-maze-rows))
-            (cols (get-maze-cols))
+            (configParent 0)
+            (idWanted 0)
 
-            (walls (getBinaries (get-cell-walls x y)))
-
-            (w0 (zerop (nth 0 walls)))
-            (w1 (zerop (nth 1 walls)))
-            (w2 (zerop (nth 2 walls)))
-            (w3 (zerop (nth 3 walls)))
-
-            (name (first op)) 
-        )   
-
+            (name (first op))
+            (level 0)
+            (lastMov nil)
+        )
+        (if bridge
+            (progn
+                (setq lastMov
+                    (case (fourth (first *memory*)) 
+                        (0      :up)
+                        (2      :right)
+                        (4      :down)
+                        (6      :left)
+                    )
+                )
+                (setq level 
+                        (case lastMov
+                            (:up                 (if (= config 17) 1 0) )
+                            (:right              (if (= config 16) 1 0) )
+                            (:down               (if (= config 17) 1 0) )
+                            (:left               (if (= config 16) 1 0) )
+                        )
+                )
+            )
+        )
         (case name
-            (:up            (and    (>= x-- 0)          w3) )
-            (:right         (and    (< y++ cols)        w2) )
-            (:down          (and    (< x++ rows)        w1) )
-            (:left          (and    (>= y-- 0)          w0) )
-            
-            (:up_rigth      (and    (>= x-- 0)      (< y++ cols)
-                                (let*
-                                    (
-                                        (aux1 (getBinaries (get-cell-walls x-- y++)))
-                                        (ur0 (zerop (nth 0 aux1)))
-                                        (ur1 (zerop (nth 1 aux1)))
-                                    )
-                                    (or (and w3 w2) (and ur0 ur1))
-                                )
-                            )
+            (:up    
+                    (cond
+                        ((and (= config 16) (= level 1))              nil)
+                        ((and (= config 17) (= level 0))              nil)
+                        ((not bridge)                                 (not (and-operator config 1)))
+                        (t                                            t)
+                    )
             )
-
-
-            (:down_right    (and    (< x++ rows)     (< y++ cols)
-                                (let*
-                                    (
-                                        (aux2 (getBinaries (get-cell-walls x++ y++)))
-                                        (dr0 (zerop (nth 0 aux2)))
-                                        (dr3 (zerop (nth 3 aux2)))
-                                    )
-                                    (or (and w1 w2) (and dr0 dr3))
-                                )
-                            )
+            (:right         
+                    (cond
+                        ((and (= config 16) (= level 0))              nil)
+                        ((and (= config 17) (= level 1))              nil)
+                        ((not bridge)                                 (not (and-operator config 2)))
+                        (t                                            t)
+                    )
             )
-
-
-            (:down_left     (and     (< x++ rows)     (>= y-- 0)
-                                (let*
-                                    (
-                                        (aux3 (getBinaries (get-cell-walls x++ y--)))
-                                        (dl3 (zerop (nth 3 aux3)))
-                                        (dl2 (zerop (nth 2 aux3)))
-                                    )
-                                    (or (and w0 w1) (and dl3 dl2))
-                                )
-                            )
+            (:down  
+                    (cond
+                        ((and (= config 16) (= level 1))              nil)
+                        ((and (= config 17) (= level 0))              nil)
+                        ((not bridge)                                 (not (and-operator config 4)))
+                        (t                                            t)
+                    )     
             )
-
-
-            (:up_left       (and     (>= x-- 0)       (>= y-- 0)
-                                (let*
-                                    (
-                                        (aux4 (getBinaries (get-cell-walls x-- y--)))
-                                        (ul1 (zerop (nth 1 aux4)))
-                                        (ul2 (zerop (nth 2 aux4)))
-                                    )
-                                    (and (and w0 w3) (and ul1 ul2))
-                                )
-                            )
+            (:left         
+                    (cond
+                        ((and (= config 16) (= level 0))              nil)
+                        ((and (= config 17) (= level 1))              nil)
+                        ((not bridge)                                 (not (and-operator config 8)))
+                        (t                                            t)
+                    )
             )
-            
         )
     )
 )
 
+(defun get-z(config op)
+    "According to the parameter config it computes if we are over the 'bridge' or under the 'bridge'"
+    (case op
+        (:up            (if (= config 17) 1 0) )
+        (:right         (if (= config 16) 1 0) )
+        (:down          (if (= config 17) 1 0) )
+        (:left          (if (= config 16) 1 0) )
+    )
+)
+
+;;      As I like the simple programming the firs idea I got was: Why just don't make a special state when is 16 or 17.
+;;      I mean, in those states we just need to know if we are over o under the bridge so in that case the representation
+;;      of the state change from two coordinates to three cooridnates.
+;;      And thats it. Obviously is the responsability of the programmer to know this and argue the fact of why using this technique.
 (defun apply-operator (op state)    
+    "This function checks simple apply the operator, but it make a trick."
     (let*
         (
             (x (first state))
@@ -218,19 +213,31 @@
             (y++ (1+ y))
             (y-- (1- y))
             (name (first op))
+            (nextConfig 0)
+            
         )
-        ;;(newState
+        (setq nextConfig
             (case name
-                (:up            (list x-- y)    )
-                (:up_right      (list x-- y++)  )
-                (:right         (list x y++)    )
-                (:down_right    (list x++ y++)  )
-                (:down          (list x++ y)    )
-                (:down_left     (list x++ y--)  )
-                (:left          (list x y--)    )
-                (:up_left       (list x-- y--)  )
+                (:up                (if (valid-state? x-- y) (get-cell-walls x-- y) -1) )
+                (:right             (if (valid-state? x y++) (get-cell-walls x y++) -1) ) 
+                (:down              (if (valid-state? x++ y) (get-cell-walls x++ y) -1) )
+                (:left              (if (valid-state? x y--) (get-cell-walls x y--) -1) )
             )
-        ;;)
+        )
+        (if (> nextConfig 15)
+                (case name
+                    (:up            (return-from apply-operator (list x-- y (get-z nextConfig name)))    )
+                    (:right         (return-from apply-operator (list x y++ (get-z nextConfig name)))   )
+                    (:down          (return-from apply-operator (list x++ y (get-z nextConfig name)))    )
+                    (:left          (return-from apply-operator (list x y-- (get-z nextConfig name)))    )
+                )
+        )
+        (case name
+            (:up            (list x-- y)    )
+            (:right         (list x y++)    )
+            (:down          (list x++ y)    )
+            (:left          (list x y--)    )
+        )
     )
 )
 
@@ -239,7 +246,7 @@
 ;;        Construye y regresa una lista con todos los descendientes validos de [estado]
 ;;;=======================================================================================
 
-(defun expand (estado)
+(defun expandDFS (estado)
 "Obtiene todos los descendientes válidos de un estado, aplicando todos los operadores en *ops* en ese mismo órden"
      (let ((descendientes  nil)
 	     (new-state  nil))
@@ -250,9 +257,7 @@
 	                (setq  descendientes  (cons  (list new-state op) descendientes))))) )
 
 (defun  remember-state?  (estado  lista-memoria)
-"Busca un estado en una lista de nodos que sirve como memoria de intentos previos
-     el estado tiene estructura:  [(<m0><c0><b0>) (<m1><c1><b1>)],
-     el nodo tiene estructura : [<Id> <estado> <id-ancestro> <operador> ]"  
+"Busca un estado en una lista de nodos que sirve como memoria de intentos previos"
      (cond ((null  lista-memoria)  Nil)
 	        ((equal  estado  (second (first  lista-memoria)))  T)  ;;el estado es igual al que se encuentra en el nodo?
 		(T  (remember-state?  estado  (rest  lista-memoria))))  )
@@ -266,8 +271,6 @@
 		       (filter-memories  (rest  lista-estados-y-ops)))
 		(T  (cons  (first lista-estados-y-ops) (filter-memories  (rest  lista-estados-y-ops))))) )  ;; de lo contrario, incluirlo en la respuesta
 
-
-
 ;;;=======================================================================================
 ;;  EXTRACT-SOLUTION                           These functions are imported.
 ;;       Recuperan y despliegan la secuencia de solucion del problema...
@@ -277,7 +280,7 @@
 ;;                                    el proceso de solución del problema...
 ;;;=======================================================================================
 
-(defun extract-solution (nodo)
+(defun extract-solution-DFS (nodo)
 "Rastrea en *memory* todos los descendientes de [nodo] hasta llegar al estado inicial"
      (labels ((locate-node  (id  lista)       ;; función local que busca un nodo por Id  y si lo encuentra regresa el nodo completo
 		  (cond ((null  lista)  Nil)
@@ -291,8 +294,6 @@
          (pop *solution*)
 	     *solution*))
 
-
-
 (defun  display-solution ()
 "Despliega la solución en forma conveniente y numerando los pasos"
     (format  t  "1) ~A nodos creados. ~%" *id*)
@@ -303,6 +304,7 @@
     (format  t  "5) Tiempo: ~A segundos.~%~%" (float (/ (- *time2* *time1*) internal-time-units-per-second))) ;; Running time
    
 )  
+
 (defun reset-all () 
 "Reinicia todas las variables globales para realizar una nueva búsqueda..."
      (setq  *open*  ())
@@ -315,7 +317,7 @@
      (setq *time1* 0)
      (setq *time2* 0))
 
-(defun  blind-search-DFS ()
+(defun  simple-DFS ()
 "Realiza una búsqueda ciega, por el método especificado y desde un estado inicial hasta un estado meta
     los métodos posibles son:  :depth-first - búsqueda en profundidad
                                :breath-first - búsqueda en anchura"
@@ -327,6 +329,7 @@
 	  (sucesores  '())
 	  (operador  nil)
 	  (meta-encontrada  nil))
+      (print ())
       (setq *time1* (get-internal-run-time))
       (insert-to-open   edo-inicial  nil)
       (loop until  (or  meta-encontrada
@@ -339,13 +342,12 @@
 	   (cond    ((equal  edo-meta  estado)
                     (setq *time2* (get-internal-run-time))
 		                (format  t  "Éxito. Meta encontrada ~%~%")
-                        (extract-solution  nodo) 
+                        (extract-solution-DFS  nodo) 
 		                (display-solution)
 		                (setq  meta-encontrada  T))
 		         (t (setq  *current-ancestor*  (first  nodo)) 
-			     (setq  sucesores  (expand estado))
+			     (setq  sucesores  (expandDFS estado))
 			     (setq  sucesores  (filter-memories  sucesores))     ;;Filtrar los estados ya revisados...
-
 			      (loop for  element  in  sucesores  do
 				    (insert-to-open  (first element)  (second element)))))))  )
      
@@ -353,5 +355,5 @@
 ;;        Load functions and invoking star_maze
 ;;;=======================================================================================
 
-(add-algorithm 'blind-search-DFS)
+(add-algorithm 'simple-DFS)
 (start-maze)
