@@ -1,0 +1,268 @@
+%   ----------------    Name and color for each subway line    ------------------
+
+color(line_1, pink).
+color(line_2, blue).
+color(line_3, green).
+color(line_4, blue_green).
+color(line_5, yellow).
+color(line_6, red).
+color(line_7, orange).
+color(line_8, green).
+color(line_9, brown).
+color(line_A, purple).
+color(line_B, green_grey).
+color(line_12, gold).
+
+%   ----------------    Origin-destiny for each subway line    ------------------
+
+path(line_1, observatorio, pantitlán).
+path(line_2, cuatro_caminos, tasqueña).
+path(line_3, indios_verdes, universidad).
+path(line_4, martín_carrera, santa_anita).
+path(line_5, politécnico, pantitlán).
+path(line_6, el_rosario, martín_carrera).
+path(line_7, el_rosario, barranca_del_muerto).
+path(line_8, garibaldi-lagunilla, constitución_de_1917).
+path(line_9, tacubaya, pantitlán).
+path(line_A, pantitlán, la_paz).
+path(line_B, buenavista, ciudad_azteca).
+path(line_12, tláhuac, mixcoac).
+
+%   ----------------    Path origin-destiny for line_1    ------------------
+
+next(observatorio, tacubaya, line_1).
+next(tacubaya, juanacatlán, line_1).
+next(juanacatlán, chapultepec, line_1).
+next(chapultepec, sevilla, line_1).
+next(sevilla, insurgentes, line_1).
+next(insurgentes, cuauhtémoc, line_1).
+next(cuauhtémoc, balderas, line_1).
+next(balderas, salto_del_agua, line_1).
+next(salto_del_agua, isabel_la_católica, line_1).
+next(isabel_la_católica, pino_suárez, line_1).
+next(pino_suárez, merced, line_1).
+next(merced, candelaria, line_1).
+next(candelaria, san_lázaro, line_1).
+next(san_lázaro, moctezuma, line_1).
+next(moctezuma, balbuena, line_1).
+next(balbuena, blvd_puerto_aéreo, line_1).
+next(blvd_puerto_aéreo, gómez_farías, line_1).
+next(gómez_farías, zaragoza, line_1).
+next(zaragoza, pantitlán, line_1).
+
+%   ----------------    Path origin-destiny for line_2    ------------------
+
+next(cuatro_caminos, panteones, line_2).
+next(panteones, tacuba, line_2).
+next(tacuba, cuitláhuac, line_2).
+next(cuitláhuac, popotla, line_2).
+next(popotla, colegio_militar, line_2).
+next(colegio_militar, normal, line_2).
+next(normal, san_cosme, line_2).
+next(san_cosme, revolución, line_2).
+next(revolución, hidalgo, line_2).
+next(hidalgo, bellas_artes, line_2).
+next(bellas_artes, allende, line_2).
+next(allende, zócalo, line_2).
+next(zócalo, pino_suárez, line_2).
+next(pino_suárez, san_antonio_abad, line_2).
+next(san_antonio_abad, chabacano, line_2).
+next(chabacano, viaducto, line_2).
+next(viaducto, xola, line_2).
+next(xola, villa_de_cortés, line_2).
+next(villa_de_cortés, nativitas, line_2).
+next(nativitas, portales, line_2).
+next(portales, ermita, line_2).
+next(ermita, general_anaya, line_2).
+next(general_anaya, tasqueña, line_2).
+
+%   ----------------    Path origin-destiny for line_3    ------------------
+
+next(indios_verdes, deportivo_18_de_marzo, line_3).
+next(deportivo_18_de_marzo, potrero, line_3).
+next(potrero, la_raza, line_3).
+next(la_raza, tlatelolco, line_3).
+next(tlatelolco, guerrero, line_3).
+next(guerrero, hidalgo, line_3).
+next(hidalgo, juárez, line_3).
+next(juárez, balderas, line_3).
+next(balderas, niños_héroes, line_3).
+next(niños_héroes, hospital_general, line_3).
+next(hospital_general, centro_médico, line_3).
+next(centro_médico, etiopía-plaza_de_la_transparencia, line_3).
+next(etiopía-plaza_de_la_transparencia, eugenia, line_3).
+next(eugenia, división_del_norte, line_3).
+next(división_del_norte, zapata, line_3).
+next(zapata, coyoacán, line_3).
+next(coyoacán, viveros-derechos_humanos, line_3).
+next(viveros-derechos_humanos, miguel_ángel_de_quevedo, line_3).
+next(miguel_ángel_de_quevedo, copilco, line_3).
+next(copilco, universidad, line_3).
+
+%   ----------------    Path origin-destiny for line_4    ------------------
+ 
+next(martín_carrera, talismán, line_4).
+next(talismán, bondojito, line_4).
+next(bondojito, consulado, line_4).
+next(consulado, canal_del_norte, line_4).
+next(canal_del_norte, morelos, line_4).
+next(morelos, candelaria, line_4).
+next(candelaria, fray_servando, line_4).
+next(fray_servando, jamaica, line_4).
+next(jamaica, santa_anita, line_4).
+
+%   ----------------    Path origin-destiny for line_5    ------------------
+
+next(politécnico, instituto_del_petróleo, line_5).
+next(instituto_del_petróleo, autobuses_del_norte, line_5).
+next(autobuses_del_norte, la_raza, line_5).
+next(la_raza, misterios, line_5).
+next(misterios, valle_gómez, line_5).
+next(valle_gómez, consulado, line_5).
+next(consulado, eduardo_molina, line_5).
+next(eduardo_molina, aragón, line_5).
+next(aragón, oceanía, line_5).
+next(oceanía, terminal_aérea, line_5).
+next(terminal_aérea, hangares, line_5).
+next(hangares, pantitlán, line_5).
+
+%   ----------------    Path origin-destiny for line_6    ------------------
+
+next(el_rosario, tezozómoc, line_6).
+next(tezozómoc, uam-azcapotzalco, line_6).
+next(uam-azcapotzalco, ferrería/arena_ciudad_de_méxico, line_6).
+next(ferrería/arena_ciudad_de_méxico, norte_45, line_6).
+next(norte_45, vallejo, line_6).
+next(vallejo, instituto_del_petróleo, line_6).
+next(instituto_del_petróleo, lindavista, line_6).
+next(lindavista, deportivo_18_de_marzo, line_6).
+next(deportivo_18_de_marzo, la_villa-basílica, line_6).
+next(la_villa-basílica, martín_carrera, line_6).
+
+%   ----------------    Path origin-destiny for line_7    ------------------
+
+next(el_rosario, aquiles_serdán, line_7).
+next(aquiles_serdán, camarones, line_7).
+next(camarones, refinería, line_7).
+next(refinería, tacuba, line_7).
+next(tacuba, san_joaquín, line_7).
+next(san_joaquín, polanco, line_7).
+next(polanco, auditorio, line_7).
+next(auditorio, constituyentes, line_7).
+next(constituyentes, tacubaya, line_7).
+next(tacubaya, san_pedro_de_los_pinos, line_7).
+next(san_pedro_de_los_pinos, san_antonio, line_7).
+next(san_antonio, mixcoac, line_7).
+next(mixcoac, barranca_del_muerto, line_7).
+
+%   ----------------    Path origin-destiny for line_8    ------------------
+
+next(garibaldi-lagunilla, bellas_artes, line_8).
+next(bellas_artes, san_juan_de_letrán, line_8).
+next(san_juan_de_letrán, salto_del_agua, line_8).
+next(salto_del_agua, doctores, line_8).
+next(doctores, obrera, line_8).
+next(obrera, chabacano, line_8).
+next(chabacano, la_viga, line_8).
+next(la_viga, santa_anita, line_8).
+next(santa_anita, coyuya, line_8).
+next(coyuya, iztacalco, line_8).
+next(iztacalco, apatlaco, line_8).
+next(apatlaco, aculco, line_8).
+next(aculco, escuadrón_201, line_8).
+next(escuadrón_201, atlalilco, line_8).
+next(atlalilco, iztapalapa, line_8).
+next(iztapalapa, cerro_de_la_estrella, line_8).
+next(cerro_de_la_estrella, uam-i, line_8).
+next(uam-i, constitución_de_1917, line_8).
+
+%   ----------------    Path origin-destiny for line_9    ------------------
+
+next(tacubaya, patriotismo, line_9).
+next(patriotismo, chilpancingo, line_9).
+next(chilpancingo, centro_médico, line_9).
+next(centro_médico, lázaro_cárdenas, line_9).
+next(lázaro_cárdenas, chabacano, line_9).
+next(chabacano, jamaica, line_9).
+next(jamaica, mixiuhca, line_9).
+next(mixiuhca, velódromo, line_9).
+next(velódromo, ciudad_deportiva, line_9).
+next(ciudad_deportiva, puebla, line_9).
+next(puebla, pantitlán, line_9).
+
+%   ----------------    Path origin-destiny for line_A    ------------------
+
+next(pantitlán, agrícola_oriental, line_A).
+next(agrícola_oriental, canal_de_san_juan, line_A).
+next(canal_de_san_juan, tepalcates, line_A).
+next(tepalcates, guelatao, line_A).
+next(guelatao, peñón_viejo, line_A).
+next(peñón_viejo, acatitla, line_A).
+next(acatitla, santa_marta, line_A).
+next(santa_marta, los_reyes, line_A).
+next(los_reyes, la_paz, line_A).
+
+%   ----------------    Path origin-destiny for line_B    ------------------
+
+next(buenavista, guerrero, line_B).
+next(guerrero, garibaldi-lagunilla, line_B).
+next(garibaldi-lagunilla, lagunilla, line_B).
+next(lagunilla, tepito, line_B).
+next(tepito, morelos, line_B).
+next(morelos, san_lázaro, line_B).
+next(san_lázaro, ricardo_flores_magón, line_B).
+next(ricardo_flores_magón, romero_rubio, line_B).
+next(romero_rubio, oceanía, line_B).
+next(oceanía, deportivo_oceanía, line_B).
+next(deportivo_oceanía, bosque_de_aragón, line_B).
+next(bosque_de_aragón, villa_de_aragón, line_B).
+next(villa_de_aragón, nezahualcóyotl, line_B).
+next(nezahualcóyotl, impulsora, line_B).
+next(impulsora, río_de_los_remedios, line_B).
+next(río_de_los_remedios, múzquiz, line_B).
+next(múzquiz, ecatepec, line_B).
+next(ecatepec, olímpica, line_B).
+next(olímpica, plaza_aragón, line_B).
+next(plaza_aragón, ciudad_azteca, line_B).
+
+%   ----------------    Path origin-destiny for line_12    ------------------
+
+next(tláhuac, tlaltenco, line_12).
+next(tlaltenco, zapotitlán, line_12).
+next(zapotitlán, nopalera, line_12).
+next(nopalera, olivos, line_12).
+next(olivos, tezonco, line_12).
+next(tezonco, periférico_oriente, line_12).
+next(periférico_oriente, calle_11, line_12).
+next(calle_11, lomas_estrella, line_12).
+next(lomas_estrella, san_andrés_tomatlán, line_12).
+next(san_andrés_tomatlán, culhuacán, line_12).
+next(culhuacán, atlalilco, line_12).
+next(atlalilco, mexicaltzingo, line_12).
+next(mexicaltzingo, ermita, line_12).
+next(ermita, eje_central, line_12).
+next(eje_central, parque_de_los_venados, line_12).
+next(parque_de_los_venados, zapata, line_12).
+next(zapata, hospital_20_de_noviembre, line_12).
+next(hospital_20_de_noviembre, insurgentes_sur, line_12).
+next(insurgentes_sur, mixcoac, line_12).
+
+%   ----------------    Rule for both ways to travel    ------------------
+
+connect(X, Y, L) :- next(X, Y, L) ; next(Y, X, L).
+
+%   ----------------    Rule to know if two station are near    ------------------
+
+near(X, Y) :- connect(X, Y, _). 
+near(X, Y) :- connect(X, Z, _) , connect(Z, Y, _).
+
+%   ----------------    Rule to know if two station are at most two far    ------------------
+
+upToTwo(X, Y) :- connect(X, Y, _).
+upToTwo(X, Y) :- connect(X, Z, _) , connect(Z, Y, _).
+uptoTwo(X, Y) :- connect(X, Z1, _) , connect(Z1, Z2, _) , connect(Z2, Y, _).
+
+%   ----------------    Rule to know if two station at most two next station  ------------------
+
+reachable(X, Y) :- connect(X, Y, _).
+reachable(X, Y) :- connect(X, Z, _) , reachable(Z, Y).
