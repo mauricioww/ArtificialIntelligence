@@ -1,4 +1,43 @@
-%   ----------------    Name and color for each subway line    ------------------
+%%                  =============        Solved by Marcos Mauricio Carpintero Mendoza    2017630231      ===============
+
+
+% =======================================================================================
+% =======================================================================================
+
+
+%   Interpretar el ejercicio como: Una consulta que no arrojara 'True', pero no especifica que tenga que arrojar 'False' necesariamente.
+%   Analizando la 'forma' recursión que tiene la regla 'reachable', se puede decir que toda estacion es alcanzable sin importar que linea se tome.
+%   Aqui la profundidad de recursion puede llegar a ser enorme, incluso si se tiene que cambiar 2 veces de linea para estaciones contiguas.
+%       o cuando se tienen en una estación muchas 'direcciones'.
+%   Practicamente no arroja 'true'
+
+%   ----------------    Queries:    ------------------
+%   ----------------            1.- reachable(iztapalapa, coyuya).
+%   ----------------            2.- reachable(juárez, la_raza).
+%   ----------------            3.- reachable(tepalcates, zaragoza).
+
+
+%   Tambien una cuasa para que esto pase es a la 'forma' del hecho 'next' que indica el primer sentido definido de como  viaja el 'tren'
+%   y para hacerlo bidireccional se ocupa una regla auxiliar. Tantas llamadas a la regla hace que se expanda el arbol de recursion.
+
+%   Arroja error 'Stack limit (1.0Gb) exceeded.
+
+
+% =======================================================================================
+% =======================================================================================
+        % color = color
+        % next = sigue
+        % path = trayecto
+        % connect = conecta
+        % near = cerca
+        % upToTwo = alcanza
+        % reachable = alcanza
+
+% =======================================================================================
+% =======================================================================================
+
+
+%   ----------------    Number and color for each line    ------------------
 
 color(line_1, pink).
 color(line_2, blue).
@@ -12,6 +51,9 @@ color(line_9, brown).
 color(line_A, purple).
 color(line_B, green_grey).
 color(line_12, gold).
+
+% =======================================================================================
+% =======================================================================================
 
 %   ----------------    Origin-destiny for each subway line    ------------------
 
@@ -27,6 +69,9 @@ path(line_9, tacubaya, pantitlán).
 path(line_A, pantitlán, la_paz).
 path(line_B, buenavista, ciudad_azteca).
 path(line_12, tláhuac, mixcoac).
+
+% =======================================================================================
+% =======================================================================================
 
 %   ----------------    Path origin-destiny for line_1    ------------------
 
@@ -246,6 +291,10 @@ next(parque_de_los_venados, zapata, line_12).
 next(zapata, hospital_20_de_noviembre, line_12).
 next(hospital_20_de_noviembre, insurgentes_sur, line_12).
 next(insurgentes_sur, mixcoac, line_12).
+
+% =======================================================================================
+% =======================================================================================
+
 
 %   ----------------    Rule for both ways to travel    ------------------
 

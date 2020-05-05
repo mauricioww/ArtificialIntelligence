@@ -1,7 +1,5 @@
 def split(subway):
-    # symbol = [',',]
     station = subway.split(', ')
-    # print(station)
     for x in range(len(station) - 1):
         print('next('+ station[x].lower().replace(' ', '_') + ', ' + station[x+1].lower().replace(' ', '_') + ', line_12).')
 
