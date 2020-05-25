@@ -1,0 +1,13 @@
+Buen día, profesor.
+
+Siempre se me presentaba un error cuando queria cargar el archivo 'final.pl' desde la consola para 
+probar los predicados.
+Si usted intenta cargarlo desde la consola: ['final.pl']. marcara errores.
+
+Lo que necesita es primero cargar: use_module(library(clpfd)) y despues cargar el archido.
+No se a que se deba, porque dentro del archivo tambien cargo el modulo clpfd para operaciones
+aritmeticas.
+
+De ahi en fuera todo esta correcto.
+
+Gracias.
